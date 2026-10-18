@@ -5,7 +5,7 @@
     "module": "UserService",
     "error_type": "NullPointerException",
     "known_issue_id": "KB-001",
-    "timestamp": "2024-01-10T13:00:00",
+    "timestamp": "2024-01-10T14:00:00",
     "log_text": "[INFO]  Running UserServiceTest\n[INFO]  Tests run: 3, Failures: 1, Errors: 0\n[ERROR] testFindByIdReturnsUser -- Time elapsed: 0.034 s <<< FAILURE!\njava.lang.NullPointerException: Cannot invoke method getEmail() on null object\n    at com.example.service.UserService.findById(UserService.java:48)\n    at com.example.service.UserServiceTest.testFindByIdReturnsUser(UserServiceTest.java:32)\n    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n    at java.lang.reflect.Method.invoke(Method.java:498)\n[ERROR] Tests run: 3, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE\n[INFO]  Total time: 4.21 s",
     "resolution": "Wrap with Optional.ifPresent() or use .orElseThrow(). Add null guard in UserService.findById before returning."
   },
@@ -15,7 +15,7 @@
     "module": "DatabaseConfig",
     "error_type": "ConnectionTimeoutException",
     "known_issue_id": "KB-002",
-    "timestamp": "2024-01-10T17:00:00",
+    "timestamp": "2024-01-10T19:00:00",
     "log_text": "[INFO]  Running DatabaseIntegrationTest\n[INFO]  Initializing Spring TestContext Framework\n[ERROR] testSaveAndRetrieveUser -- Time elapsed: 30.001 s <<< ERROR!\ncom.zaxxer.hikari.pool.HikariPool$PoolInitializationException: Failed to initialize pool: Connection timeout\n    at com.zaxxer.hikari.pool.HikariPool.throwPoolInitializationException(HikariPool.java:596)\n    at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:580)\n    at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)\nCaused by: java.sql.SQLException: Timeout waiting for connection from pool (connectionTimeout=30000ms)\n    at com.example.db.DatabaseIntegrationTest.testSaveAndRetrieveUser(DatabaseIntegrationTest.java:55)\n[ERROR] Tests run: 5, Failures: 0, Errors: 1, Skipped: 0\n[INFO]  BUILD FAILURE",
     "resolution": "Annotate test class with @Transactional to auto-rollback, or close connections explicitly in @AfterEach. Increase pool size in test config."
   },
@@ -25,7 +25,7 @@
     "module": "PaymentService",
     "error_type": "AssertionError",
     "known_issue_id": "KB-003",
-    "timestamp": "2024-01-10T21:00:00",
+    "timestamp": "2024-01-11T02:00:00",
     "log_text": "[INFO]  Running PaymentServiceTest\n[ERROR] testCalculateTotalWithTax -- Time elapsed: 0.012 s <<< FAILURE!\norg.opentest4j.AssertionFailedError: expected: <10.005> but was: <10.004999999999999>\n    at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)\n    at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)\n    at com.example.service.PaymentServiceTest.testCalculateTotalWithTax(PaymentServiceTest.java:67)\n[INFO]  Tests run: 4, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE\n[INFO]  Total time: 2.88 s",
     "resolution": "Use BigDecimal for monetary values. Replace assertEquals with assertThat(...).isCloseTo(expected, within(0.01))."
   },
@@ -35,7 +35,7 @@
     "module": "AuthService",
     "error_type": "TimeoutException",
     "known_issue_id": "KB-004",
-    "timestamp": "2024-01-11T05:00:00",
+    "timestamp": "2024-01-11T08:00:00",
     "log_text": "[INFO]  Running AuthServiceTest\n[ERROR] testValidateJwtToken -- Time elapsed: 32.004 s <<< ERROR!\njava.util.concurrent.TimeoutException: Test timed out after 30 seconds\n    at org.junit.jupiter.api.extension.TimeoutExtension.evaluate(TimeoutExtension.java:83)\n    at com.example.auth.AuthServiceTest.testValidateJwtToken(AuthServiceTest.java:88)\n    ... \nCaused by: java.lang.InterruptedException\n    at java.lang.Thread.sleep(Native Method)\n[INFO]  Note: KeyPairGenerator RSA-4096 initialized in @BeforeEach \u2014 avg 812ms/test\n[ERROR] Tests run: 2, Failures: 0, Errors: 1, Skipped: 0\n[INFO]  BUILD FAILURE",
     "resolution": "Move key generation to @BeforeAll (static). Cache the KeyPair across tests. Use RSA-2048 for test environments."
   },
@@ -45,7 +45,7 @@
     "module": "OrderProcessor",
     "error_type": "IndexOutOfBoundsException",
     "known_issue_id": "KB-005",
-    "timestamp": "2024-01-11T11:00:00",
+    "timestamp": "2024-01-11T10:00:00",
     "log_text": "[INFO]  Running OrderProcessorTest\n[ERROR] testProcessEmptyOrderList -- Time elapsed: 0.008 s <<< FAILURE!\njava.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0\n    at java.base/java.util.Objects.checkIndex(Objects.java:372)\n    at java.base/java.util.ArrayList.get(ArrayList.java:459)\n    at com.example.order.OrderProcessor.process(OrderProcessor.java:34)\n    at com.example.order.OrderProcessorTest.testProcessEmptyOrderList(OrderProcessorTest.java:42)\n[INFO]  Tests run: 6, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE",
     "resolution": "Add isEmpty() guard before accessing list elements. Update mock to reflect realistic non-empty input or handle empty case explicitly."
   },
@@ -55,7 +55,7 @@
     "module": "CacheManager",
     "error_type": "ConcurrentModificationException",
     "known_issue_id": "KB-006",
-    "timestamp": "2024-01-11T17:00:00",
+    "timestamp": "2024-01-11T19:00:00",
     "log_text": "[INFO]  Running CacheManagerTest\n[ERROR] testEvictOnCapacityExceeded -- Time elapsed: 0.221 s <<< ERROR!\njava.util.ConcurrentModificationException\n    at java.base/java.util.HashMap$HashIterator.nextNode(HashMap.java:1597)\n    at java.base/java.util.HashMap$EntryIterator.next(HashMap.java:1630)\n    at com.example.cache.CacheManager.evictLRU(CacheManager.java:78)\n    at com.example.cache.CacheManagerTest.testEvictOnCapacityExceeded(CacheManagerTest.java:91)\n[INFO]  Tests run: 3, Failures: 0, Errors: 1, Skipped: 0\n[INFO]  BUILD FAILURE",
     "resolution": "Replace HashMap with ConcurrentHashMap. Use iterator.remove() for safe removal during iteration."
   },
@@ -65,7 +65,7 @@
     "module": "RecursiveParser",
     "error_type": "StackOverflowError",
     "known_issue_id": "KB-007",
-    "timestamp": "2024-01-12T00:00:00",
+    "timestamp": "2024-01-11T21:00:00",
     "log_text": "[INFO]  Running RecursiveParserTest\n[ERROR] testParseDeepNestedJson -- Time elapsed: 0.198 s <<< ERROR!\njava.lang.StackOverflowError\n    at com.example.parser.RecursiveParser.parse(RecursiveParser.java:55)\n    at com.example.parser.RecursiveParser.parse(RecursiveParser.java:67)\n    at com.example.parser.RecursiveParser.parse(RecursiveParser.java:67)\n    ... (truncated, 512 identical frames)\n    at com.example.parser.RecursiveParserTest.testParseDeepNestedJson(RecursiveParserTest.java:29)\n[INFO]  Tests run: 4, Failures: 0, Errors: 1, Skipped: 0\n[INFO]  BUILD FAILURE",
     "resolution": "Add a maxDepth parameter. Throw ParseException when depth exceeds threshold. Use iterative parsing with an explicit stack for deep structures."
   },
@@ -85,7 +85,7 @@
     "module": "PluginLoader",
     "error_type": "ClassCastException",
     "known_issue_id": "KB-009",
-    "timestamp": "2024-01-12T12:00:00",
+    "timestamp": "2024-01-12T11:00:00",
     "log_text": "[INFO]  Running PluginLoaderTest\n[ERROR] testLoadExternalPlugin -- Time elapsed: 0.087 s <<< FAILURE!\njava.lang.ClassCastException: class com.external.MyPlugin cannot be cast to class com.example.plugin.PluginInterface\n    at com.example.plugin.PluginLoader.load(PluginLoader.java:62)\n    at com.example.plugin.PluginLoaderTest.testLoadExternalPlugin(PluginLoaderTest.java:45)\n[INFO]  Note: PluginInterface was updated in v2.3.0; plugin JAR compiled against v2.2.1\n[ERROR] Tests run: 3, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE",
     "resolution": "Add version check on plugin load. Enforce interface version compatibility. Recompile all plugins after interface changes."
   },
@@ -95,7 +95,7 @@
     "module": "NotificationService",
     "error_type": "ConnectException",
     "known_issue_id": "KB-010",
-    "timestamp": "2024-01-12T17:00:00",
+    "timestamp": "2024-01-12T15:00:00",
     "log_text": "[INFO]  Running NotificationServiceTest\n[ERROR] testSendWelcomeEmail -- Time elapsed: 10.003 s <<< ERROR!\norg.springframework.mail.MailSendException: Mail server connection failed; nested exception is:\n    java.net.ConnectException: Connection refused (Connection refused)\n    at org.springframework.mail.javamail.JavaMailSenderImpl.doSend(JavaMailSenderImpl.java:448)\n    at com.example.notification.NotificationService.sendWelcomeEmail(NotificationService.java:73)\n    at com.example.notification.NotificationServiceTest.testSendWelcomeEmail(NotificationServiceTest.java:38)\n[INFO]  SMTP host: localhost, port: 25 \u2014 connection refused\n[ERROR] Tests run: 2, Failures: 0, Errors: 1, Skipped: 0\n[INFO]  BUILD FAILURE",
     "resolution": "Mock the JavaMailSender or use GreenMail for integration tests. Profile-separate SMTP config so tests use a mock sender."
   },
@@ -105,7 +105,7 @@
     "module": "UserService",
     "error_type": "NullPointerException",
     "known_issue_id": "KB-001",
-    "timestamp": "2024-01-12T22:00:00",
+    "timestamp": "2024-01-12T21:00:00",
     "log_text": "[INFO]  Running UserRepositoryTest\n[ERROR] testGetUserProfile -- Time elapsed: 0.029 s <<< FAILURE!\njava.lang.NullPointerException: null\n    at com.example.service.UserService.getUserProfile(UserService.java:82)\n    at com.example.repository.UserRepositoryTest.testGetUserProfile(UserRepositoryTest.java:44)\n[INFO]  getUserProfile called findById which returned null \u2014 no Optional guard\n[ERROR] Tests run: 5, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE",
     "resolution": "Wrap with Optional.ifPresent() or use .orElseThrow(). Add null guard in UserService.findById before returning."
   },
@@ -115,7 +115,7 @@
     "module": "PaymentService",
     "error_type": "AssertionError",
     "known_issue_id": "KB-003",
-    "timestamp": "2024-01-13T08:00:00",
+    "timestamp": "2024-01-13T07:00:00",
     "log_text": "[INFO]  Running PaymentGatewayTest\n[ERROR] testRefundCalculation -- Time elapsed: 0.015 s <<< FAILURE!\norg.opentest4j.AssertionFailedError:\nExpected: 49.99\nActual  : 49.989999999999995\n    at com.example.payment.PaymentGatewayTest.testRefundCalculation(PaymentGatewayTest.java:101)\n[INFO]  Likely floating-point precision error in double arithmetic\n[ERROR] Tests run: 3, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE",
     "resolution": "Use BigDecimal for monetary values. Replace assertEquals with assertThat(...).isCloseTo(expected, within(0.01))."
   },
@@ -125,7 +125,7 @@
     "module": "OrderProcessor",
     "error_type": "IndexOutOfBoundsException",
     "known_issue_id": "KB-005",
-    "timestamp": "2024-01-13T14:00:00",
+    "timestamp": "2024-01-13T11:00:00",
     "log_text": "[INFO]  Running OrderServiceTest\n[ERROR] testBulkProcessOrders -- Time elapsed: 0.011 s <<< FAILURE!\njava.lang.IndexOutOfBoundsException: Index: 0, Size: 0\n    at java.util.ArrayList.rangeCheck(ArrayList.java:659)\n    at java.util.ArrayList.get(ArrayList.java:435)\n    at com.example.order.OrderProcessor.processBatch(OrderProcessor.java:57)\n    at com.example.order.OrderServiceTest.testBulkProcessOrders(OrderServiceTest.java:78)\n[INFO]  Mock returned empty list; no empty-list guard in processBatch\n[ERROR] Tests run: 4, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE",
     "resolution": "Add isEmpty() guard before accessing list elements. Update mock to reflect realistic non-empty input or handle empty case explicitly."
   },
@@ -145,7 +145,7 @@
     "module": "ReportGenerator",
     "error_type": "FileNotFoundException",
     "known_issue_id": "KB-008",
-    "timestamp": "2024-01-13T21:00:00",
+    "timestamp": "2024-01-14T00:00:00",
     "log_text": "[INFO]  Running InvoiceGeneratorTest\n[ERROR] testExportInvoiceToCsv -- Time elapsed: 0.038 s <<< ERROR!\njava.io.FileNotFoundException: /tmp/ci-workspace/invoices/invoice_2024.csv (No such file or directory)\n    at com.example.report.InvoiceGenerator.exportCsv(InvoiceGenerator.java:88)\n    at com.example.report.InvoiceGeneratorTest.testExportInvoiceToCsv(InvoiceGeneratorTest.java:34)\n[INFO]  /tmp/ci-workspace/invoices directory not created before test run\n[ERROR] Tests run: 2, Failures: 0, Errors: 1, Skipped: 0\n[INFO]  BUILD FAILURE",
     "resolution": "Add Files.createDirectories(outputPath.getParent()) before writing. Alternatively, create the directory in CI pipeline setup."
   }

@@ -47,13 +47,9 @@ def extract_error_type(log_text: str) -> str:
 
 
 def extract_error_message(log_text: str, error_type: str) -> str:
-    """Extract the human-readable error message following the exception."""
-    pattern = rf"{re.escape(error_type)}[^:]*:\s*(.+)"
-    match = re.search(pattern, log_text)
-    if match:
-        return match.group(1).strip()
-    # Fallback: grab the FAILURE!/ERROR! line
-    match = re.search(r"<<< (?:FAILURE|ERROR)!\s*\n(.+)", log_text)
+    """Extract the message from the exception headline (never from stack frames)."""
+    pattern = rf"^[ \t]*(?:Caused by:[ \t]*)?[\w$.]*{re.escape(error_type)}:\s*(.+)$"
+    match = re.search(pattern, log_text, re.MULTILINE)
     if match:
         return match.group(1).strip()
     return "No message extracted"
