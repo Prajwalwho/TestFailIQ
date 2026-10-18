@@ -3,13 +3,14 @@ FastAPI application — Test Failure Investigation Assistant backend.
 """
 
 import json
+from contextlib import asynccontextmanager
 import os
 import sys
 import uuid
 from datetime import datetime
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -17,7 +18,6 @@ from pydantic import BaseModel
 sys.path.insert(0, os.path.dirname(__file__))
 
 from ingestion.log_parser import parse_log
-from ingestion.embedder import embed_text
 from storage.faiss_store import FailureRecord, get_store
 from storage.knowledge_base import get_kb
 from storage.diagnosis_store import get_diagnosis_store
@@ -25,15 +25,26 @@ from rag.retriever import retrieve
 from rag.generator import generate_diagnosis
 from evaluation.metrics import compute_metrics
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Pre-load models and index synthetic logs on first run."""
+    store = get_store()
+    get_kb()
+    if store.size == 0:
+        _ingest_synthetic_logs(store)
+    yield
+
+
 app = FastAPI(
     title="Test Failure Investigation Assistant",
     description="RAG-based CI/test log analysis and root-cause diagnosis.",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

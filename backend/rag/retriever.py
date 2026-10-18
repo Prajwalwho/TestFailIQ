@@ -11,6 +11,9 @@ from storage.faiss_store import FailureRecord, get_store
 from storage.knowledge_base import KnowledgeEntry, get_kb
 
 
+SIMILAR_MIN_SCORE = 0.50   # drop historical failures less similar than this
+KB_MIN_SCORE = 0.45        # drop KB entries less similar than this
+
 @dataclass
 class RetrievedEvidence:
     similar_failures: list[tuple[FailureRecord, float]]   # (record, similarity_score)
@@ -29,11 +32,19 @@ def retrieve(parsed_log: ParsedLog, top_k: int = 5, kb_top_k: int = 3) -> Retrie
 
     # --- FAISS search ---
     store = get_store()
-    similar_failures = store.search(search_text, top_k=top_k)
+    similar_failures = [
+        (rec, score)
+        for rec, score in store.search(search_text, top_k=top_k)
+        if score >= SIMILAR_MIN_SCORE
+    ]
 
     # --- KB semantic search ---
     kb = get_kb()
-    kb_matches = kb.search(search_text, top_k=kb_top_k)
+    kb_matches = [
+        (entry, score)
+        for entry, score in kb.search(search_text, top_k=kb_top_k)
+        if score >= KB_MIN_SCORE
+    ]
 
     top_kb_entry = kb_matches[0][0] if kb_matches else None
     top_similarity = similar_failures[0][1] if similar_failures else 0.0
