@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# Generated at runtime (rebuilt automatically)
+backend/data/faiss_store/
+backend/data/diagnoses.json
+
+# Node
+node_modules/
+dist/
+
+# OS / editor
+Thumbs.db
+.DS_Store
+.vscode/

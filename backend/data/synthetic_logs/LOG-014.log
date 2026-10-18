@@ -1,0 +1,7 @@
+[INFO]  Running TokenValidationTest
+[ERROR] testExpiredTokenRejection -- Time elapsed: 31.008 s <<< ERROR!
+java.util.concurrent.TimeoutException: Test timed out after 30000ms
+    at com.example.auth.TokenValidationTest.testExpiredTokenRejection(TokenValidationTest.java:55)
+[INFO]  RSA-4096 key initialized per-test in @BeforeEach, took 841ms average
+[ERROR] Tests run: 3, Failures: 0, Errors: 1, Skipped: 0
+[INFO]  BUILD FAILURE

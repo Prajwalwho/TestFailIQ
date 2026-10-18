@@ -1,0 +1,9 @@
+[INFO]  Running OrderProcessorTest
+[ERROR] testProcessEmptyOrderList -- Time elapsed: 0.008 s <<< FAILURE!
+java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
+    at java.base/java.util.Objects.checkIndex(Objects.java:372)
+    at java.base/java.util.ArrayList.get(ArrayList.java:459)
+    at com.example.order.OrderProcessor.process(OrderProcessor.java:34)
+    at com.example.order.OrderProcessorTest.testProcessEmptyOrderList(OrderProcessorTest.java:42)
+[INFO]  Tests run: 6, Failures: 1, Errors: 0, Skipped: 0
+[INFO]  BUILD FAILURE

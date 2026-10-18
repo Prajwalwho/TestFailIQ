@@ -1,0 +1,8 @@
+[INFO]  Running PluginLoaderTest
+[ERROR] testLoadExternalPlugin -- Time elapsed: 0.087 s <<< FAILURE!
+java.lang.ClassCastException: class com.external.MyPlugin cannot be cast to class com.example.plugin.PluginInterface
+    at com.example.plugin.PluginLoader.load(PluginLoader.java:62)
+    at com.example.plugin.PluginLoaderTest.testLoadExternalPlugin(PluginLoaderTest.java:45)
+[INFO]  Note: PluginInterface was updated in v2.3.0; plugin JAR compiled against v2.2.1
+[ERROR] Tests run: 3, Failures: 1, Errors: 0, Skipped: 0
+[INFO]  BUILD FAILURE

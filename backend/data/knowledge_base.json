@@ -1,0 +1,112 @@
+[
+  {
+    "id": "KB-001",
+    "title": "NullPointerException in UserService.findById",
+    "error_type": "NullPointerException",
+    "module": "UserService",
+    "description": "findById returns null when user does not exist in DB. Callers assume non-null return.",
+    "root_cause": "UserRepository.findById returns Optional<User> but callers call .get() without checking isPresent().",
+    "resolution": "Wrap with Optional.ifPresent() or use .orElseThrow(). Add null guard in UserService.findById before returning.",
+    "fix_snippet": "return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));",
+    "tags": ["null-pointer", "java", "user-service", "optional"]
+  },
+  {
+    "id": "KB-002",
+    "title": "Database connection timeout during integration tests",
+    "error_type": "ConnectionTimeoutException",
+    "module": "DatabaseConfig",
+    "description": "Integration tests fail intermittently with connection timeout when connection pool is exhausted.",
+    "root_cause": "Tests open DB connections but don't release them. Connection pool (max=5) gets exhausted after a few parallel test runs.",
+    "resolution": "Annotate test class with @Transactional to auto-rollback, or close connections explicitly in @AfterEach. Increase pool size in test config.",
+    "fix_snippet": "@AfterEach void cleanup() { entityManager.close(); }",
+    "tags": ["database", "connection-pool", "integration-test", "timeout"]
+  },
+  {
+    "id": "KB-003",
+    "title": "AssertionError in PaymentService — amount rounding mismatch",
+    "error_type": "AssertionError",
+    "module": "PaymentService",
+    "description": "Payment amount assertions fail due to floating-point precision differences.",
+    "root_cause": "Double arithmetic introduces floating-point errors. assertEquals(expected, actual) fails for values like 10.005 vs 10.004999999.",
+    "resolution": "Use BigDecimal for monetary values. Replace assertEquals with assertThat(...).isCloseTo(expected, within(0.01)).",
+    "fix_snippet": "assertThat(actual).isCloseTo(expected, within(new BigDecimal(\"0.01\")));",
+    "tags": ["assertion", "floating-point", "bigdecimal", "payment"]
+  },
+  {
+    "id": "KB-004",
+    "title": "Timeout in AuthService — token validation too slow",
+    "error_type": "TimeoutException",
+    "module": "AuthService",
+    "description": "Token validation tests time out when running against a real JWT with RSA-4096 keys.",
+    "root_cause": "RSA-4096 key generation in @BeforeEach runs on every test case. Key generation takes ~800ms per test.",
+    "resolution": "Move key generation to @BeforeAll (static). Cache the KeyPair across tests. Use RSA-2048 for test environments.",
+    "fix_snippet": "@BeforeAll static void setupKeys() { testKeyPair = KeyPairGenerator.getInstance(\"RSA\").generateKeyPair(); }",
+    "tags": ["timeout", "jwt", "rsa", "auth", "performance"]
+  },
+  {
+    "id": "KB-005",
+    "title": "IndexOutOfBoundsException in OrderProcessor",
+    "error_type": "IndexOutOfBoundsException",
+    "module": "OrderProcessor",
+    "description": "OrderProcessor fails when processing an empty order list.",
+    "root_cause": "Code accesses orders.get(0) without checking if the list is empty. Empty orders passed from upstream mock.",
+    "resolution": "Add isEmpty() guard before accessing list elements. Update mock to reflect realistic non-empty input or handle empty case explicitly.",
+    "fix_snippet": "if (orders.isEmpty()) return Collections.emptyList();",
+    "tags": ["index-out-of-bounds", "list", "empty-check", "order-processor"]
+  },
+  {
+    "id": "KB-006",
+    "title": "ConcurrentModificationException in CacheManager",
+    "error_type": "ConcurrentModificationException",
+    "module": "CacheManager",
+    "description": "Cache eviction tests fail with ConcurrentModificationException during iteration.",
+    "root_cause": "Test thread modifies HashMap while another thread iterates it during eviction. HashMap is not thread-safe.",
+    "resolution": "Replace HashMap with ConcurrentHashMap. Use iterator.remove() for safe removal during iteration.",
+    "fix_snippet": "private final Map<String, Object> cache = new ConcurrentHashMap<>();",
+    "tags": ["concurrent", "thread-safety", "cache", "hashmap"]
+  },
+  {
+    "id": "KB-007",
+    "title": "StackOverflowError in RecursiveParser",
+    "error_type": "StackOverflowError",
+    "module": "RecursiveParser",
+    "description": "Parser tests fail with StackOverflowError on deeply nested JSON input.",
+    "root_cause": "Recursive parse() method has no depth limit. Deeply nested test fixtures (depth > 500) exhaust the JVM stack.",
+    "resolution": "Add a maxDepth parameter. Throw ParseException when depth exceeds threshold. Use iterative parsing with an explicit stack for deep structures.",
+    "fix_snippet": "if (depth > MAX_DEPTH) throw new ParseException(\"Max nesting depth exceeded: \" + MAX_DEPTH);",
+    "tags": ["stack-overflow", "recursion", "parser", "json", "depth-limit"]
+  },
+  {
+    "id": "KB-008",
+    "title": "FileNotFoundException in ReportGenerator",
+    "error_type": "FileNotFoundException",
+    "module": "ReportGenerator",
+    "description": "Report generation tests fail because the output directory doesn't exist.",
+    "root_cause": "ReportGenerator assumes /reports/ directory exists. In CI, the directory is not pre-created.",
+    "resolution": "Add Files.createDirectories(outputPath.getParent()) before writing. Alternatively, create the directory in CI pipeline setup.",
+    "fix_snippet": "Files.createDirectories(outputPath.getParent()); Files.write(outputPath, content.getBytes());",
+    "tags": ["file-not-found", "io", "ci", "directory", "report"]
+  },
+  {
+    "id": "KB-009",
+    "title": "ClassCastException in PluginLoader",
+    "error_type": "ClassCastException",
+    "module": "PluginLoader",
+    "description": "Plugin loading fails when a plugin JAR was compiled against a different interface version.",
+    "root_cause": "PluginInterface was updated (new method added) but plugin JAR was not recompiled. ClassLoader loads the old class.",
+    "resolution": "Add version check on plugin load. Enforce interface version compatibility. Recompile all plugins after interface changes.",
+    "fix_snippet": "if (!plugin.getVersion().equals(REQUIRED_VERSION)) throw new PluginVersionMismatchException();",
+    "tags": ["class-cast", "plugin", "classloader", "version-mismatch"]
+  },
+  {
+    "id": "KB-010",
+    "title": "HTTP 500 in NotificationService — SMTP connection refused",
+    "error_type": "ConnectException",
+    "module": "NotificationService",
+    "description": "Notification tests fail because the test environment has no SMTP server running.",
+    "root_cause": "NotificationService tries to connect to real SMTP (localhost:25) in tests. No mock is configured.",
+    "resolution": "Mock the JavaMailSender or use GreenMail for integration tests. Profile-separate SMTP config so tests use a mock sender.",
+    "fix_snippet": "@MockBean JavaMailSender mailSender; // in test class",
+    "tags": ["smtp", "connection-refused", "mock", "notification", "email"]
+  }
+]

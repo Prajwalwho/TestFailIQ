@@ -1,0 +1,10 @@
+[INFO]  Running NotificationServiceTest
+[ERROR] testSendWelcomeEmail -- Time elapsed: 10.003 s <<< ERROR!
+org.springframework.mail.MailSendException: Mail server connection failed; nested exception is:
+    java.net.ConnectException: Connection refused (Connection refused)
+    at org.springframework.mail.javamail.JavaMailSenderImpl.doSend(JavaMailSenderImpl.java:448)
+    at com.example.notification.NotificationService.sendWelcomeEmail(NotificationService.java:73)
+    at com.example.notification.NotificationServiceTest.testSendWelcomeEmail(NotificationServiceTest.java:38)
+[INFO]  SMTP host: localhost, port: 25 — connection refused
+[ERROR] Tests run: 2, Failures: 0, Errors: 1, Skipped: 0
+[INFO]  BUILD FAILURE

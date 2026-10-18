@@ -1,0 +1,9 @@
+[INFO]  Running PaymentGatewayTest
+[ERROR] testRefundCalculation -- Time elapsed: 0.015 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+Expected: 49.99
+Actual  : 49.989999999999995
+    at com.example.payment.PaymentGatewayTest.testRefundCalculation(PaymentGatewayTest.java:101)
+[INFO]  Likely floating-point precision error in double arithmetic
+[ERROR] Tests run: 3, Failures: 1, Errors: 0, Skipped: 0
+[INFO]  BUILD FAILURE

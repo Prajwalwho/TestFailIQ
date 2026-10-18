@@ -1,0 +1,10 @@
+[INFO]  Running RecursiveParserTest
+[ERROR] testParseDeepNestedJson -- Time elapsed: 0.198 s <<< ERROR!
+java.lang.StackOverflowError
+    at com.example.parser.RecursiveParser.parse(RecursiveParser.java:55)
+    at com.example.parser.RecursiveParser.parse(RecursiveParser.java:67)
+    at com.example.parser.RecursiveParser.parse(RecursiveParser.java:67)
+    ... (truncated, 512 identical frames)
+    at com.example.parser.RecursiveParserTest.testParseDeepNestedJson(RecursiveParserTest.java:29)
+[INFO]  Tests run: 4, Failures: 0, Errors: 1, Skipped: 0
+[INFO]  BUILD FAILURE

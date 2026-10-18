@@ -1,0 +1,11 @@
+[INFO]  Running DatabaseIntegrationTest
+[INFO]  Initializing Spring TestContext Framework
+[ERROR] testSaveAndRetrieveUser -- Time elapsed: 30.001 s <<< ERROR!
+com.zaxxer.hikari.pool.HikariPool$PoolInitializationException: Failed to initialize pool: Connection timeout
+    at com.zaxxer.hikari.pool.HikariPool.throwPoolInitializationException(HikariPool.java:596)
+    at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:580)
+    at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+Caused by: java.sql.SQLException: Timeout waiting for connection from pool (connectionTimeout=30000ms)
+    at com.example.db.DatabaseIntegrationTest.testSaveAndRetrieveUser(DatabaseIntegrationTest.java:55)
+[ERROR] Tests run: 5, Failures: 0, Errors: 1, Skipped: 0
+[INFO]  BUILD FAILURE
