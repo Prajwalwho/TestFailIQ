@@ -6,6 +6,6 @@ java.util.concurrent.TimeoutException: Test timed out after 30 seconds
     ... 
 Caused by: java.lang.InterruptedException
     at java.lang.Thread.sleep(Native Method)
-[INFO]  Note: KeyPairGenerator RSA-4096 initialized in @BeforeEach — avg 812ms/test
+[INFO]  Note: KeyPairGenerator RSA-4096 initialized in @BeforeEach â€” avg 812ms/test
 [ERROR] Tests run: 2, Failures: 0, Errors: 1, Skipped: 0
 [INFO]  BUILD FAILURE

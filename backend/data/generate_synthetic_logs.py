@@ -278,6 +278,8 @@ java.io.FileNotFoundException: /tmp/ci-workspace/invoices/invoice_2024.csv (No s
 
 def generate_logs():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
+    with open(os.path.join(BASE_DIR, "knowledge_base.json"), encoding="utf-8") as f:
+        kb_resolutions = {e["id"]: e["resolution"] for e in json.load(f)}
     metadata = []
     base_time = datetime(2024, 1, 10, 9, 0, 0)
 
@@ -291,18 +293,18 @@ def generate_logs():
             "known_issue_id": scenario["known_issue_id"],
             "timestamp": timestamp.isoformat(),
             "log_text": scenario["log_template"],
-            "resolution": None,
+            "resolution": kb_resolutions.get(scenario["known_issue_id"]),
         }
         # Write individual log file
         log_path = os.path.join(OUTPUT_DIR, f"{scenario['id']}.log")
-        with open(log_path, "w") as f:
+        with open(log_path, "w", encoding="utf-8") as f:
             f.write(scenario["log_template"])
         metadata.append(record)
         print(f"  [OK] Generated {scenario['id']} - {scenario['test_name']}")
 
     # Write metadata index
     meta_path = os.path.join(BASE_DIR, "synthetic_logs_metadata.json")
-    with open(meta_path, "w") as f:
+    with open(meta_path, "w", encoding="utf-8") as f:
         json.dump(metadata, f, indent=2)
 
     print(f"\n[DONE] Generated {len(SCENARIOS)} synthetic logs -> {OUTPUT_DIR}")

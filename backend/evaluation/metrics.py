@@ -3,8 +3,8 @@ Evaluation metrics for the RAG retrieval and diagnosis pipeline.
 """
 
 from dataclasses import dataclass, field
+from storage.faiss_store import FailureRecord, get_store
 from storage.diagnosis_store import get_diagnosis_store
-
 
 @dataclass
 class EvalMetrics:

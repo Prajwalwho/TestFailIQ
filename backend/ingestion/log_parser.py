@@ -28,19 +28,22 @@ class ParsedLog:
         )
 
 
+# First line that looks like an exception headline, e.g.
+#   java.lang.NullPointerException: msg
+#   com.zaxxer.hikari.pool.HikariPool$PoolInitializationException: msg
+_EXCEPTION_HEADLINE = re.compile(
+    r"^\s*(?:Caused by:\s*)?([\w$.]+(?:Exception|Error))\b", re.MULTILINE
+)
+
+
 def extract_error_type(log_text: str) -> str:
-    """Extract the primary exception/error class name."""
-    patterns = [
-        r"(java\.lang\.\w+(?:Error|Exception))",
-        r"(com\.\w+(?:\.\w+)*(?:Exception|Error))",
-        r"(org\.\w+(?:\.\w+)*(?:Exception|Error))",
-        r"(\w+(?:Exception|Error|Failure))",
-    ]
-    for pattern in patterns:
-        match = re.search(pattern, log_text)
-        if match:
-            return match.group(1).split(".")[-1]  # Short class name
-    return "UnknownError"
+    """Extract the primary exception/error class name (short form)."""
+    match = _EXCEPTION_HEADLINE.search(log_text)
+    if match:
+        return re.split(r"[.$]", match.group(1))[-1]
+    # Fallback: any token ending in Exception/Error/Failure
+    match = re.search(r"(\w+(?:Exception|Error|Failure))", log_text)
+    return match.group(1) if match else "UnknownError"
 
 
 def extract_error_message(log_text: str, error_type: str) -> str:
@@ -68,10 +71,13 @@ def extract_test_name(log_text: str) -> str:
 
 
 def extract_module(log_text: str) -> str:
-    """Best-effort module extraction from stack trace."""
-    match = re.search(r"at com\.example\.(\w+)\.", log_text)
-    if match:
-        return match.group(1)
+    """Best-effort module: the first non-test class in an application stack frame."""
+    classes = re.findall(r"at com\.example(?:\.\w+)*\.(\w+)\.\w+\(", log_text)
+    for class_name in classes:
+        if not class_name.endswith("Test"):
+            return class_name
+    if classes:
+        return classes[0].removesuffix("Test")
     return "Unknown"
 
 

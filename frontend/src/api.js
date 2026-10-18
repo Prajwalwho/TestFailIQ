@@ -15,11 +15,11 @@ export async function apiDiagnose({ log_text, test_name, module, top_k = 5 }) {
   return r.json();
 }
 
-export async function apiIngest({ log_text, test_name, module }) {
+export async function apiIngest({ log_text, test_name, module, known_issue_id, resolution }) {
   const r = await fetch(`${API_BASE}/ingest`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ log_text, test_name, module }),
+    body: JSON.stringify({ log_text, test_name, module, known_issue_id, resolution }),
   });
   if (!r.ok) throw new Error(`Ingest failed: ${r.status}`);
   return r.json();
