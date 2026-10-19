@@ -1,0 +1,198 @@
+[
+  {
+    "id": "HARD-001",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-001",
+    "log_text": "[INFO]  Running ContactResolverTest\n[ERROR] testResolveFailure -- Time elapsed: 19.826 s <<< ERROR!\njava.lang.NullPointerException: Cannot invoke \"Contact.getPhone()\" because the return value of \"ContactRepository.lookup(String)\" is null\n    at com.example.customer.ContactResolver.resolve(ContactResolver.java:23)\n    at com.example.customer.ContactResolverTest.testResolveFailure(ContactResolverTest.java:114)\n[INFO]  lookup returns null for an unknown key; caller dereferences it without a check\n[ERROR] Tests run: 4, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-002",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-001",
+    "log_text": "[INFO]  Running InvoiceOwnerFinderTest\n[ERROR] testOwnerOfFailure -- Time elapsed: 7.599 s <<< ERROR!\njava.lang.NullPointerException: Cannot read field \"id\" because \"owner\" is null\n    at com.example.billing.InvoiceOwnerFinder.ownerOf(InvoiceOwnerFinder.java:37)\n    at com.example.billing.InvoiceOwnerFinderTest.testOwnerOfFailure(InvoiceOwnerFinderTest.java:114)\n[INFO]  repository returned no row for the given id\n[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-003",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-002",
+    "log_text": "[INFO]  Running LedgerWriterTest\n[ERROR] testCommitFailure -- Time elapsed: 20.981 s <<< ERROR!\njava.sql.SQLTransientConnectionException: HikariPool-2 - Connection is not available, request timed out after 30001ms\n    at com.example.billing.LedgerWriter.commit(LedgerWriter.java:134)\n    at com.example.billing.LedgerWriterTest.testCommitFailure(LedgerWriterTest.java:89)\n[INFO]  total=5, active=5, idle=0, waiting=4\n[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-004",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-002",
+    "log_text": "[INFO]  Running OrderStoreTest\n[ERROR] testPersistFailure -- Time elapsed: 18.309 s <<< ERROR!\norg.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction; nested exception is java.sql.SQLTransientConnectionException: connection pool exhausted\n    at com.example.orders.OrderStore.persist(OrderStore.java:24)\n    at com.example.orders.OrderStoreTest.testPersistFailure(OrderStoreTest.java:23)\n[INFO]  earlier tests in the suite left connections open\n[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-005",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-003",
+    "log_text": "[INFO]  Running DiscountCalcTest\n[ERROR] testApplyFailure -- Time elapsed: 6.786 s <<< FAILURE!\norg.opentest4j.AssertionFailedError: expected: <0.1> but was: <0.09999999999999998>\n    at com.example.pricing.DiscountCalc.apply(DiscountCalc.java:84)\n    at com.example.pricing.DiscountCalcTest.testApplyFailure(DiscountCalcTest.java:97)\n[INFO]  float arithmetic used for a money amount\n[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-006",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-003",
+    "log_text": "[INFO]  Running BalanceCheckerTest\n[ERROR] testReconcileFailure -- Time elapsed: 17.403 s <<< FAILURE!\njava.lang.AssertionError: Expected 1234.56 but was 1234.5600000000002\n    at com.example.ledger.BalanceChecker.reconcile(BalanceChecker.java:111)\n    at com.example.ledger.BalanceCheckerTest.testReconcileFailure(BalanceCheckerTest.java:103)\n[INFO]  double used for currency values\n[ERROR] Tests run: 7, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-007",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-004",
+    "log_text": "[INFO]  Running SignatureVerifierTest\n[ERROR] testVerifyFailure -- Time elapsed: 16.898 s <<< ERROR!\njava.util.concurrent.TimeoutException: Test timed out after 25 seconds\n    at com.example.security.SignatureVerifier.verify(SignatureVerifier.java:48)\n    at com.example.security.SignatureVerifierTest.testVerifyFailure(SignatureVerifierTest.java:77)\n[INFO]  each test regenerates a 4096-bit RSA key pair in its setup method\n[ERROR] Tests run: 6, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-008",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-004",
+    "log_text": "[INFO]  Running LoginFlowTest\n[ERROR] testSignInFailure -- Time elapsed: 8.631 s <<< ERROR!\njava.util.concurrent.TimeoutException: execution exceeded 18000 ms\n    at com.example.auth.LoginFlow.signIn(LoginFlow.java:131)\n    at com.example.auth.LoginFlowTest.testSignInFailure(LoginFlowTest.java:20)\n[INFO]  key pair generation costs about 800 ms for every test method\n[ERROR] Tests run: 8, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-009",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-005",
+    "log_text": "[INFO]  Running StockPickerTest\n[ERROR] testPickFirstFailure -- Time elapsed: 24.982 s <<< ERROR!\njava.util.NoSuchElementException\n    at com.example.inventory.StockPicker.pickFirst(StockPicker.java:109)\n    at com.example.inventory.StockPickerTest.testPickFirstFailure(StockPickerTest.java:74)\n[INFO]  getFirst() called on an empty list; no isEmpty() guard\n[ERROR] Tests run: 4, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-010",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-005",
+    "log_text": "[INFO]  Running LabelPrinterTest\n[ERROR] testPrintAllFailure -- Time elapsed: 8.621 s <<< ERROR!\njava.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0\n    at com.example.shipping.LabelPrinter.printAll(LabelPrinter.java:47)\n    at com.example.shipping.LabelPrinterTest.testPrintAllFailure(LabelPrinterTest.java:117)\n[INFO]  empty shipment list handed over by the mocked upstream\n[ERROR] Tests run: 4, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-011",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-006",
+    "log_text": "[INFO]  Running ListenerRegistryTest\n[ERROR] testNotifyAllFailure -- Time elapsed: 3.177 s <<< ERROR!\njava.util.ConcurrentModificationException\n    at com.example.events.ListenerRegistry.notifyAll(ListenerRegistry.java:68)\n    at com.example.events.ListenerRegistryTest.testNotifyAllFailure(ListenerRegistryTest.java:32)\n[INFO]  listener list modified by another thread during notification\n[ERROR] Tests run: 4, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-012",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-006",
+    "log_text": "[INFO]  Running TokenSweeperTest\n[ERROR] testExpireFailure -- Time elapsed: 26.274 s <<< ERROR!\njava.util.ConcurrentModificationException\n    at com.example.session.TokenSweeper.expire(TokenSweeper.java:97)\n    at com.example.session.TokenSweeperTest.testExpireFailure(TokenSweeperTest.java:53)\n[INFO]  entry removed from the map while the for-each loop was still running\n[ERROR] Tests run: 8, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-013",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-007",
+    "log_text": "[INFO]  Running NestedFlattenerTest\n[ERROR] testFlattenFailure -- Time elapsed: 1.357 s <<< ERROR!\njava.lang.StackOverflowError\n    at com.example.json.NestedFlattener.flatten(NestedFlattener.java:78)\n    at com.example.json.NestedFlattenerTest.testFlattenFailure(NestedFlattenerTest.java:88)\n[INFO]  recursion without a depth guard on a 3000-level fixture\n[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-014",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-007",
+    "log_text": "[INFO]  Running RuleChainRunnerTest\n[ERROR] testStepFailure -- Time elapsed: 30.167 s <<< ERROR!\njava.lang.StackOverflowError\n    at com.example.rules.RuleChainRunner.step(RuleChainRunner.java:68)\n    at com.example.rules.RuleChainRunnerTest.testStepFailure(RuleChainRunnerTest.java:30)\n[INFO]  self-referencing rule graph recursed until the stack was exhausted\n[ERROR] Tests run: 6, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-015",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-008",
+    "log_text": "[INFO]  Running CsvExporterTest\n[ERROR] testDumpFailure -- Time elapsed: 9.096 s <<< ERROR!\njava.nio.file.NoSuchFileException: build/out/2024/q3/sales.csv\n    at com.example.export.CsvExporter.dump(CsvExporter.java:100)\n    at com.example.export.CsvExporterTest.testDumpFailure(CsvExporterTest.java:99)\n[INFO]  output folder was never created on the clean agent\n[ERROR] Tests run: 8, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-016",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-008",
+    "log_text": "[INFO]  Running ManualBuilderTest\n[ERROR] testEmitFailure -- Time elapsed: 11.217 s <<< ERROR!\njava.io.FileNotFoundException: /var/ci/artifacts/docs/index.html (No such file or directory)\n    at com.example.docs.ManualBuilder.emit(ManualBuilder.java:44)\n    at com.example.docs.ManualBuilderTest.testEmitFailure(ManualBuilderTest.java:110)\n[INFO]  artifacts directory missing before the test ran\n[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-017",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-009",
+    "log_text": "[INFO]  Running AddonBootstrapTest\n[ERROR] testInitFailure -- Time elapsed: 1.430 s <<< ERROR!\njava.lang.IncompatibleClassChangeError: Class com.thirdparty.ReportAddon does not implement the requested interface com.example.addons.Addon\n    at com.example.addons.AddonBootstrap.init(AddonBootstrap.java:49)\n    at com.example.addons.AddonBootstrapTest.testInitFailure(AddonBootstrapTest.java:118)\n[INFO]  addon jar built against API v1 while the host runs v2\n[ERROR] Tests run: 4, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-018",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-009",
+    "log_text": "[INFO]  Running AddonRegistryTest\n[ERROR] testBindFailure -- Time elapsed: 30.542 s <<< ERROR!\njava.lang.NoSuchMethodError: com.example.addons.Addon.describe()Ljava/lang/String;\n    at com.example.addons.AddonRegistry.bind(AddonRegistry.java:129)\n    at com.example.addons.AddonRegistryTest.testBindFailure(AddonRegistryTest.java:49)\n[INFO]  stale add-on jar after the interface changed\n[ERROR] Tests run: 8, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-019",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-010",
+    "log_text": "[INFO]  Running PagerNotifierTest\n[ERROR] testNotifyOnCallFailure -- Time elapsed: 3.140 s <<< ERROR!\njava.net.ConnectException: Connection refused: connect\n    at com.example.alerts.PagerNotifier.notifyOnCall(PagerNotifier.java:55)\n    at com.example.alerts.PagerNotifierTest.testNotifyOnCallFailure(PagerNotifierTest.java:78)\n[INFO]  no SMTP relay is listening on localhost:25 during the unit test\n[ERROR] Tests run: 7, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-020",
+    "split": "test",
+    "kind": "paraphrase",
+    "known_issue_id": "KB-010",
+    "log_text": "[INFO]  Running PasswordResetMailerTest\n[ERROR] testSendLinkFailure -- Time elapsed: 25.859 s <<< ERROR!\norg.springframework.mail.MailSendException: Mail server connection failed\n    at com.example.accounts.PasswordResetMailer.sendLink(PasswordResetMailer.java:40)\n    at com.example.accounts.PasswordResetMailerTest.testSendLinkFailure(PasswordResetMailerTest.java:67)\n[INFO]  real mail sender used in the test; nothing listens on port 25\n[ERROR] Tests run: 4, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-021",
+    "split": "test",
+    "kind": "decoy",
+    "known_issue_id": null,
+    "log_text": "[INFO]  Running ReportSchedulerTest\n[ERROR] testFireFailure -- Time elapsed: 6.503 s <<< ERROR!\njava.lang.IllegalStateException: Scheduler has been shut down\n    at com.example.report.ReportScheduler.fire(ReportScheduler.java:54)\n    at com.example.report.ReportSchedulerTest.testFireFailure(ReportSchedulerTest.java:109)\n[INFO]  test did not wait for the executor to finish\n[ERROR] Tests run: 7, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-022",
+    "split": "test",
+    "kind": "decoy",
+    "known_issue_id": null,
+    "log_text": "[INFO]  Running PaymentGatewayClientTest\n[ERROR] testChargeFailure -- Time elapsed: 20.093 s <<< ERROR!\njavax.net.ssl.SSLHandshakeException: PKIX path building failed: unable to find valid certification path\n    at com.example.payment.PaymentGatewayClient.charge(PaymentGatewayClient.java:97)\n    at com.example.payment.PaymentGatewayClientTest.testChargeFailure(PaymentGatewayClientTest.java:101)\n[INFO]  expired test certificate\n[ERROR] Tests run: 3, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-023",
+    "split": "test",
+    "kind": "decoy",
+    "known_issue_id": null,
+    "log_text": "[INFO]  Running SchemaMigratorTest\n[ERROR] testMigrateFailure -- Time elapsed: 16.563 s <<< ERROR!\norg.flywaydb.core.api.FlywayException: Validate failed: Migration checksum mismatch for migration version 4\n    at com.example.db.SchemaMigrator.migrate(SchemaMigrator.java:51)\n    at com.example.db.SchemaMigratorTest.testMigrateFailure(SchemaMigratorTest.java:40)\n[INFO]  an already-applied migration was edited\n[ERROR] Tests run: 5, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-024",
+    "split": "test",
+    "kind": "decoy",
+    "known_issue_id": null,
+    "log_text": "[INFO]  Running PasswordPolicyTest\n[ERROR] testCheckFailure -- Time elapsed: 11.769 s <<< ERROR!\njava.lang.IllegalArgumentException: Password must contain at least 12 characters\n    at com.example.auth.PasswordPolicy.check(PasswordPolicy.java:138)\n    at com.example.auth.PasswordPolicyTest.testCheckFailure(PasswordPolicyTest.java:101)\n[INFO]  test used an 8-character password\n[ERROR] Tests run: 7, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-025",
+    "split": "test",
+    "kind": "decoy",
+    "known_issue_id": null,
+    "log_text": "[INFO]  Running OrderStatusMapperTest\n[ERROR] testMapFailure -- Time elapsed: 17.270 s <<< ERROR!\njava.lang.IllegalArgumentException: No enum constant com.example.order.Status.PENDING_REVIEW\n    at com.example.order.OrderStatusMapper.map(OrderStatusMapper.java:107)\n    at com.example.order.OrderStatusMapperTest.testMapFailure(OrderStatusMapperTest.java:61)\n[INFO]  enum value renamed in the API\n[ERROR] Tests run: 8, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-026",
+    "split": "test",
+    "kind": "decoy",
+    "known_issue_id": null,
+    "log_text": "[INFO]  Running CacheWarmupTest\n[ERROR] testRunFailure -- Time elapsed: 23.820 s <<< ERROR!\njava.lang.OutOfMemoryError: Java heap space\n    at com.example.cache.CacheWarmup.run(CacheWarmup.java:27)\n    at com.example.cache.CacheWarmupTest.testRunFailure(CacheWarmupTest.java:49)\n[INFO]  warmup loaded 3 million entries\n[ERROR] Tests run: 8, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-027",
+    "split": "test",
+    "kind": "decoy",
+    "known_issue_id": null,
+    "log_text": "[INFO]  Running PluginManifestParserTest\n[ERROR] testReadFailure -- Time elapsed: 1.005 s <<< ERROR!\ncom.fasterxml.jackson.core.JsonParseException: Unexpected character ('}' (code 125)): was expecting double-quote to start field name\n    at com.example.plugin.PluginManifestParser.read(PluginManifestParser.java:60)\n    at com.example.plugin.PluginManifestParserTest.testReadFailure(PluginManifestParserTest.java:71)\n[INFO]  malformed manifest in test resources\n[ERROR] Tests run: 4, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  },
+  {
+    "id": "HARD-028",
+    "split": "test",
+    "kind": "decoy",
+    "known_issue_id": null,
+    "log_text": "[INFO]  Running TemplateRendererTest\n[ERROR] testRenderFailure -- Time elapsed: 2.061 s <<< ERROR!\njava.lang.IllegalArgumentException: Unknown placeholder {{firstName}}\n    at com.example.notification.TemplateRenderer.render(TemplateRenderer.java:136)\n    at com.example.notification.TemplateRendererTest.testRenderFailure(TemplateRendererTest.java:140)\n[INFO]  template variable missing\n[ERROR] Tests run: 6, Failures: 1, Errors: 0, Skipped: 0\n[INFO]  BUILD FAILURE"
+  }
+]
