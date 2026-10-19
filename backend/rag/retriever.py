@@ -11,8 +11,11 @@ from storage.faiss_store import FailureRecord, get_store
 from storage.knowledge_base import KnowledgeEntry, get_kb
 
 
-SIMILAR_MIN_SCORE = 0.50   # drop historical failures less similar than this
-KB_MIN_SCORE = 0.45        # drop KB entries less similar than this
+# Tuned on the held-out eval set (evaluation/run_eval.py threshold sweep).
+# Re-tune on real logs (Day 10).
+SIMILAR_MIN_SCORE = 0.60   # drop historical failures less similar than this
+KB_MIN_SCORE = 0.50        # drop KB entries less similar than this
+
 
 @dataclass
 class RetrievedEvidence:

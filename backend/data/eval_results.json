@@ -1,0 +1,239 @@
+{
+  "generated_at": "2026-10-19T08:41:20.045503",
+  "index_size": 30,
+  "test_size": 26,
+  "systems": {
+    "failure_retrieval": {
+      "n_positive": 20,
+      "n_negative": 6,
+      "hit_at_1": 1.0,
+      "hit_at_3": 1.0,
+      "mrr": 1.0,
+      "mean_top1_score_positive": 0.708,
+      "mean_top1_score_negative": 0.552,
+      "current_threshold": 0.6,
+      "at_current_threshold": {
+        "threshold": 0.6,
+        "recall": 0.95,
+        "wrong": 0.0,
+        "negative_false_match": 0.0
+      },
+      "suggested_threshold": 0.6,
+      "sweep": [
+        {
+          "threshold": 0.3,
+          "recall": 1.0,
+          "wrong": 0.0,
+          "negative_false_match": 1.0
+        },
+        {
+          "threshold": 0.35,
+          "recall": 1.0,
+          "wrong": 0.0,
+          "negative_false_match": 1.0
+        },
+        {
+          "threshold": 0.4,
+          "recall": 1.0,
+          "wrong": 0.0,
+          "negative_false_match": 1.0
+        },
+        {
+          "threshold": 0.45,
+          "recall": 1.0,
+          "wrong": 0.0,
+          "negative_false_match": 1.0
+        },
+        {
+          "threshold": 0.5,
+          "recall": 1.0,
+          "wrong": 0.0,
+          "negative_false_match": 1.0
+        },
+        {
+          "threshold": 0.55,
+          "recall": 1.0,
+          "wrong": 0.0,
+          "negative_false_match": 0.5
+        },
+        {
+          "threshold": 0.6,
+          "recall": 0.95,
+          "wrong": 0.0,
+          "negative_false_match": 0.0
+        },
+        {
+          "threshold": 0.65,
+          "recall": 0.8,
+          "wrong": 0.0,
+          "negative_false_match": 0.0
+        },
+        {
+          "threshold": 0.7,
+          "recall": 0.6,
+          "wrong": 0.0,
+          "negative_false_match": 0.0
+        }
+      ],
+      "per_issue": {
+        "KB-001": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-002": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-003": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-004": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-005": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-006": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-007": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-008": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-009": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-010": {
+          "hits": 2,
+          "total": 2
+        }
+      },
+      "misses": []
+    },
+    "kb_retrieval": {
+      "n_positive": 20,
+      "n_negative": 6,
+      "hit_at_1": 1.0,
+      "hit_at_3": 1.0,
+      "mrr": 1.0,
+      "mean_top1_score_positive": 0.555,
+      "mean_top1_score_negative": 0.414,
+      "current_threshold": 0.5,
+      "at_current_threshold": {
+        "threshold": 0.5,
+        "recall": 0.8,
+        "wrong": 0.0,
+        "negative_false_match": 0.0
+      },
+      "suggested_threshold": 0.5,
+      "sweep": [
+        {
+          "threshold": 0.3,
+          "recall": 1.0,
+          "wrong": 0.0,
+          "negative_false_match": 1.0
+        },
+        {
+          "threshold": 0.35,
+          "recall": 1.0,
+          "wrong": 0.0,
+          "negative_false_match": 1.0
+        },
+        {
+          "threshold": 0.4,
+          "recall": 1.0,
+          "wrong": 0.0,
+          "negative_false_match": 0.5
+        },
+        {
+          "threshold": 0.45,
+          "recall": 0.9,
+          "wrong": 0.0,
+          "negative_false_match": 0.167
+        },
+        {
+          "threshold": 0.5,
+          "recall": 0.8,
+          "wrong": 0.0,
+          "negative_false_match": 0.0
+        },
+        {
+          "threshold": 0.55,
+          "recall": 0.5,
+          "wrong": 0.0,
+          "negative_false_match": 0.0
+        },
+        {
+          "threshold": 0.6,
+          "recall": 0.2,
+          "wrong": 0.0,
+          "negative_false_match": 0.0
+        },
+        {
+          "threshold": 0.65,
+          "recall": 0.1,
+          "wrong": 0.0,
+          "negative_false_match": 0.0
+        },
+        {
+          "threshold": 0.7,
+          "recall": 0.05,
+          "wrong": 0.0,
+          "negative_false_match": 0.0
+        }
+      ],
+      "per_issue": {
+        "KB-001": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-002": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-003": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-004": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-005": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-006": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-007": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-008": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-009": {
+          "hits": 2,
+          "total": 2
+        },
+        "KB-010": {
+          "hits": 2,
+          "total": 2
+        }
+      },
+      "misses": []
+    }
+  }
+}

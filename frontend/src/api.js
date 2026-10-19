@@ -49,3 +49,9 @@ export async function apiMetrics() {
   const r = await fetch(`${API_BASE}/metrics`);
   return r.json();
 }
+
+export async function apiEvalResults() {
+  const r = await fetch(`${API_BASE}/eval-results`);
+  if (!r.ok) return null;
+  return r.json();
+}

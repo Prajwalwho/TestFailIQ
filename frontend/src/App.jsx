@@ -4,6 +4,7 @@ import LogInput from "./components/LogInput";
 import DiagnosisCard from "./components/DiagnosisCard";
 import SimilarFailures from "./components/SimilarFailures";
 import EvalDashboard from "./components/EvalDashboard";
+import HeldOutEval from "./components/HeldOutEval";
 import KnowledgeView from "./components/KnowledgeView";
 import { apiDiagnose, apiIngest, apiHealth, apiFeedback } from "./api";
 
@@ -185,7 +186,12 @@ export default function App() {
         {tab === "knowledge" && <KnowledgeView />}
 
         {/* ── Evaluation tab ── */}
-        {tab === "eval" && <EvalDashboard />}
+                {tab === "eval" && (
+          <>
+            <HeldOutEval />
+            <EvalDashboard />
+          </>
+        )}
       </main>
 
       <Toast toast={toast} />
