@@ -1,0 +1,245 @@
+{
+  "generated_at": "2026-10-21T06:28:39.552945+00:00",
+  "documents": 79,
+  "queries": 49,
+  "label_counts": {
+    "environment_or_infra": 15,
+    "assertion_failure": 13,
+    "runtime_exception": 6,
+    "build_or_compile": 15
+  },
+  "systems": {
+    "embedding / full": {
+      "n": 49,
+      "hit1_count": 17,
+      "hit_at_1": 0.347,
+      "hit1_ci": [
+        0.229,
+        0.487
+      ],
+      "hit_at_3": 0.735,
+      "mrr": 0.562,
+      "per_label": {
+        "environment_or_infra": {
+          "hits": 3,
+          "total": 15
+        },
+        "assertion_failure": {
+          "hits": 0,
+          "total": 13
+        },
+        "runtime_exception": {
+          "hits": 0,
+          "total": 6
+        },
+        "build_or_compile": {
+          "hits": 14,
+          "total": 15
+        }
+      }
+    },
+    "embedding / no_names": {
+      "n": 49,
+      "hit1_count": 25,
+      "hit_at_1": 0.51,
+      "hit1_ci": [
+        0.375,
+        0.644
+      ],
+      "hit_at_3": 0.857,
+      "mrr": 0.691,
+      "per_label": {
+        "environment_or_infra": {
+          "hits": 5,
+          "total": 15
+        },
+        "assertion_failure": {
+          "hits": 5,
+          "total": 13
+        },
+        "runtime_exception": {
+          "hits": 1,
+          "total": 6
+        },
+        "build_or_compile": {
+          "hits": 14,
+          "total": 15
+        }
+      }
+    },
+    "embedding / no_names_norm": {
+      "n": 49,
+      "hit1_count": 25,
+      "hit_at_1": 0.51,
+      "hit1_ci": [
+        0.375,
+        0.644
+      ],
+      "hit_at_3": 0.837,
+      "mrr": 0.682,
+      "per_label": {
+        "environment_or_infra": {
+          "hits": 5,
+          "total": 15
+        },
+        "assertion_failure": {
+          "hits": 6,
+          "total": 13
+        },
+        "runtime_exception": {
+          "hits": 0,
+          "total": 6
+        },
+        "build_or_compile": {
+          "hits": 14,
+          "total": 15
+        }
+      }
+    },
+    "embedding / error_only": {
+      "n": 49,
+      "hit1_count": 27,
+      "hit_at_1": 0.551,
+      "hit1_ci": [
+        0.413,
+        0.681
+      ],
+      "hit_at_3": 0.878,
+      "mrr": 0.727,
+      "per_label": {
+        "environment_or_infra": {
+          "hits": 3,
+          "total": 15
+        },
+        "assertion_failure": {
+          "hits": 9,
+          "total": 13
+        },
+        "runtime_exception": {
+          "hits": 1,
+          "total": 6
+        },
+        "build_or_compile": {
+          "hits": 14,
+          "total": 15
+        }
+      }
+    },
+    "embedding / raw_head": {
+      "n": 49,
+      "hit1_count": 13,
+      "hit_at_1": 0.265,
+      "hit1_ci": [
+        0.162,
+        0.403
+      ],
+      "hit_at_3": 0.531,
+      "mrr": 0.497,
+      "per_label": {
+        "environment_or_infra": {
+          "hits": 0,
+          "total": 15
+        },
+        "assertion_failure": {
+          "hits": 1,
+          "total": 13
+        },
+        "runtime_exception": {
+          "hits": 0,
+          "total": 6
+        },
+        "build_or_compile": {
+          "hits": 12,
+          "total": 15
+        }
+      }
+    },
+    "bm25 / no_names": {
+      "n": 49,
+      "hit1_count": 30,
+      "hit_at_1": 0.612,
+      "hit1_ci": [
+        0.472,
+        0.736
+      ],
+      "hit_at_3": 0.878,
+      "mrr": 0.75,
+      "per_label": {
+        "environment_or_infra": {
+          "hits": 9,
+          "total": 15
+        },
+        "assertion_failure": {
+          "hits": 7,
+          "total": 13
+        },
+        "runtime_exception": {
+          "hits": 0,
+          "total": 6
+        },
+        "build_or_compile": {
+          "hits": 14,
+          "total": 15
+        }
+      }
+    },
+    "hybrid / no_names": {
+      "n": 49,
+      "hit1_count": 25,
+      "hit_at_1": 0.51,
+      "hit1_ci": [
+        0.375,
+        0.644
+      ],
+      "hit_at_3": 0.898,
+      "mrr": 0.7,
+      "per_label": {
+        "environment_or_infra": {
+          "hits": 4,
+          "total": 15
+        },
+        "assertion_failure": {
+          "hits": 7,
+          "total": 13
+        },
+        "runtime_exception": {
+          "hits": 0,
+          "total": 6
+        },
+        "build_or_compile": {
+          "hits": 14,
+          "total": 15
+        }
+      }
+    },
+    "majority class (baseline)": {
+      "n": 49,
+      "hit1_count": 0,
+      "hit_at_1": 0.0,
+      "hit1_ci": [
+        0.0,
+        0.073
+      ],
+      "hit_at_3": 0.408,
+      "mrr": 0.278,
+      "per_label": {
+        "environment_or_infra": {
+          "hits": 0,
+          "total": 15
+        },
+        "assertion_failure": {
+          "hits": 0,
+          "total": 13
+        },
+        "runtime_exception": {
+          "hits": 0,
+          "total": 6
+        },
+        "build_or_compile": {
+          "hits": 0,
+          "total": 15
+        }
+      }
+    }
+  }
+}

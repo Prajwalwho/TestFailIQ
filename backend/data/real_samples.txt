@@ -373,7 +373,7 @@ FAILED providers/common/ai/tests/unit/common/ai/sandbox/test_modal.py::TestVendo
 =========================================================== 1 failed, 17744 passed, 1147 skipped, 1 xfailed, 2 warnings in 1378.77s (0:22:58) ============================================================
 
 
-##### REAL-037 | repo=pallets/flask | job=Development Versions | category=missing_dependency | framework=pytest
+##### REAL-037 | repo=pallets/flask | job=Development Versions | category=config_or_env | framework=pytest
  + blinker==1.10.0.dev0 (from https://github.com/pallets-eco/blinker/archive/refs/heads/main.tar.gz)
  - click==8.4.2
  + click==8.6.0.dev0 (from https://github.com/pallets/click/archive/refs/heads/main.tar.gz)
@@ -541,7 +541,7 @@ Post job cleanup.
 Pruning is unnecessary.
 Post job cleanup.
 
-##### REAL-054 | repo=expressjs/express | job=Node.js 16 - ubuntu-latest | category=config_or_env | framework=mocha
+##### REAL-054 | repo=expressjs/express | job=Node.js 16 - ubuntu-latest | category=assertion_mismatch | framework=mocha
         ✔ should respond with 400 bad request
       with an invalid api key
         ✔ should respond with 401 unauthorized
@@ -637,7 +637,7 @@ Execution failed for task ':module:spring-boot-jersey:checkstyleMain' (registere
   symbol:   method getAnnotationInfo(Class<API>)
   location: variable m of type MethodInfo
 
-##### REAL-068 | repo=quarkusio/quarkus | job=JDK Build | category=resource_exhaustion | framework=gradle
+##### REAL-068 | repo=quarkusio/quarkus | job=JDK Build | category=network_or_service | framework=gradle
 Response body doesn't match expectation.
 Expected: is "{\"id\":5,\"name\":\"Aloi\"}"
   Actual: {"details":"Error id 90a312cb-f880-46ab-865b-ee9fbe945e96-5, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
