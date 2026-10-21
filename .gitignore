@@ -17,3 +17,6 @@ dist/
 Thumbs.db
 .DS_Store
 .vscode/
+
+# Raw excerpts from third-party CI logs (manifest.json and labels.csv are committed)
+backend/data/real_logs/logs/

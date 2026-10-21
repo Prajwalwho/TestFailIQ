@@ -1,0 +1,870 @@
+##### REAL-001 | repo=pytest-dev/pytest | job=build (ubuntu-py314) | category=timeout | framework=pytest
+testing/python/fixtures.py::TestShowFixtures::test_show_fixtures_deprecated_nodeid_fixture
+  /tmp/pytest-of-runner/pytest-0/test_show_fixtures_deprecated_nodeid_fixture0/conftest.py:4: PytestRemovedIn10Warning: Passing nodeid to _register_fixture is deprecated. Pass node instead for fixture scoping.
+    session._fixturemanager._register_fixture(
+
+testing/python/fixtures.py::TestShowFixtures::test_show_fixtures_deprecated_nodeid_fixture
+  /home/runner/work/pytest/pytest/.tox/py314-coverage/lib/python3.14/site-packages/_pytest/fixtures.py:2095: PytestRemovedIn10Warning: Passing baseid to FixtureDef is deprecated. Pass node instead for fixture scoping.
+    fixture_def = FixtureDef(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=================================== XPASSES ====================================
+-------- generated xml file: /home/runner/work/pytest/pytest/junit.xml ---------
+=========================== short test summary info ============================
+FAILED testing/test_debugging.py::TestPDB::test_pdb_unittest_postmortem - pexpect.exceptions.TIMEOUT: Timeout exceeded.
+<pexpect.pty_spawn.spawn object at 0x7f33be196270>
+command: /home/runner/work/pytest/pytest/.tox/py314-coverage/bin/python
+args: ['/home/runner/work/pytest/pytest/.tox/py314-coverage/bin/python', '-mpytest', '--basetemp=/tmp/pytest-of-runner/pytest-0/test_pdb_unittest_postmortem0/temp-pexpect', '--pdb', '/tmp/pytest-of-runner/pytest-0/test_pdb_unittest_postmortem0/test_pdb_unittest_postmortem.py']
+buffer (last 100 chars): b") p self.filename\r\n'debug.me'\r\n(Pdb) "
+before (last 100 chars): b") p self.filename\r\n'debug.me'\r\n(Pdb) "
+after: <class 'pexpect.exceptions.TIMEOUT'>
+match: None
+match_index: None
+exitstatus: None
+flag_eof: False
+pid: 7809
+child_fd: 22
+   [...]
+maxread: 2000
+ignorecase: False
+searchwindowsize: None
+delaybeforesend: 0.05
+delayafterclose: 0.1
+delayafterterminate: 0.1
+searcher: searcher_re:
+    0: EOF
+XPASS testing/_py/test_local.py::TestLocalPath::test_make_numbered_dir_multiprocess_safe - #11603
+XPASS testing/test_debugging.py::TestDebuggingBreakpoints::test_pdb_not_altered - #10042
+XPASS testing/test_debugging.py::test_pdb_suspends_fixture_capturing[capfd] - #10042
+XPASS testing/test_debugging.py::test_pdb_suspends_fixture_capturing[capsys] - #10042
+= 1 failed, 4692 passed, 51 skipped, 17 xfailed, 4 xpassed, 2 warnings in 453.67s (0:07:33) =
+py314-coverage: exit 1 (457.67 seconds) /home/runner/work/pytest/pytest> coverage run -m pytest --junitxml=junit.xml pid=2427
+  py314-coverage: FAIL code 1 (464.97=setup[7.30]+cmd[457.67] seconds)
+  evaluation failed :( (465.09 seconds)
+##[error]Process completed with exit code 1.
+Post job cleanup.
+##[start-action display=Install uv;id=__41511dd8-9cf8-4d8d-aa9f-1821f55a5ff1.__astral-sh_setup-uv]
+##[end-action id=__41511dd8-9cf8-4d8d-aa9f-1821f55a5ff1.__astral-sh_setup-uv;outcome=skipped;conclusion=skipped;duration_ms=0]
+Post job cleanup.
+[command]/usr/bin/git version
+git version 2.55.0
+Temporarily overriding HOME='/home/runner/work/_temp/954efcc8-9618-467d-86fb-6939cbb580ca' before making global git config changes
+Adding repository directory to the temporary git global config as a safe directory
+
+##### REAL-007 | repo=pandas-dev/pandas | job=Windows-MinGW | category=other | framework=pytest
+
+  Cached compiler stderr:
+
+  Run-time dependency python found: YES 3.13
+  Running command: D:\a\pandas\pandas\.pixi\envs\mingw\python.exe -c "
+  import os
+  import numpy as np
+  try:
+      # Check if include directory is inside the pandas dir
+      # e.g. a venv created inside the pandas dir
+      # If so, convert it to a relative path
+      incdir = os.path.relpath(np.get_include())
+  except Exception:
+      incdir = np.get_include()
+  print(incdir)
+       "
+  --- stdout ---
+  ..\.pixi\envs\mingw\Lib\site-packages\numpy\_core\include
+
+  --- stderr ---
+
+
+  Running compile:
+  Working directory:  D:\a\pandas\pandas\build\mingw\meson-private\tmpgvs4hy98
+  Code:
+
+##### REAL-015 | repo=scikit-learn/scikit-learn | job=Linux pylatest_pip_openblas_pandas | category=null_or_type_error | framework=pytest
+            key = (key,)
+        np_key = key
+        devices = {self.device}
+        if isinstance(key, tuple):
+            devices.update(
+                [subkey.device for subkey in key if isinstance(subkey, Array)]
+            )
+            if len(devices) > 1:
+>               raise ValueError(
+                    "Array indexing is only allowed when array to be indexed and all "
+                    "indexing arrays are on the same device."
+                )
+E               ValueError: Array indexing is only allowed when array to be indexed and all indexing arrays are on the same device.
+
+devices    = {array_api_strict.Device('CPU_DEVICE'), array_api_strict.Device('device1')}
+key        = (Array([[False,  True,  True,  True]], dtype=array_api_strict.bool),)
+np_key     = (Array([[False,  True,  True,  True]], dtype=array_api_strict.bool),)
+self       = Array([[     -inf,
+        3.5187776,
+        3.5592132,
+        3.57223  ]], dtype=array_api_strict.float32, device=array_api_strict.Device('device1'))
+
+../../../../miniconda3/envs/testvenv/lib/python3.13/site-packages/array_api_strict/_array_object.py:709: ValueError
+- generated xml file: /home/runner/work/scikit-learn/scikit-learn/tmp_folder/test-data.xml -
+============================= slowest 20 durations =============================
+   [...]
+2.66s call     tests/test_metaestimators_metadata_routing.py::test_setting_request_on_sub_estimator_removes_error[TunedThresholdClassifierCV]
+2.41s call     tests/test_multioutput.py::test_multi_output_classification_partial_fit_parallelism
+2.36s call     decomposition/tests/test_dict_learning.py::test_sparse_coder_parallel_mmap
+2.30s call     utils/tests/test_multiclass.py::test_unique_labels_mixed_types
+2.24s call     inspection/tests/test_partial_dependence.py::test_partial_dependence_non_null_weight_idx[-1-estimator2]
+2.24s call     decomposition/tests/test_dict_learning.py::test_sparse_encode_shapes_omp
+2.23s call     inspection/tests/test_partial_dependence.py::test_partial_dependence_non_null_weight_idx[1-estimator2]
+2.21s call     inspection/tests/test_partial_dependence.py::test_partial_dependence_non_null_weight_idx[0-estimator2]
+2.20s call     preprocessing/tests/test_target_encoder.py::test_fit_transform_not_associated_with_y_if_ordinal_categorical_is_not[3]
+2.18s call     model_selection/tests/test_classification_threshold.py::test_tuned_threshold_classifier_metric_with_parameter
+2.16s call     inspection/tests/test_partial_dependence.py::test_partial_dependence_equivalence_equal_sample_weight[LogisticRegression-data1]
+=========================== short test summary info ============================
+FAILED decomposition/tests/test_pca.py::test_pca_mle_array_api_compliance[PCA(n_components='mle',svd_solver='full')-check_array_api_get_precision-array_api_strict-device1-float32] - ValueError: Array indexing is only allowed when array to be indexed and all indexing arrays are on the same device.
+= 1 failed, 43048 passed, 10566 skipped, 238 xfailed, 121 xpassed, 4937 warnings in 1018.64s (0:16:58) =
+##[error]Process completed with exit code 1.
+Post job cleanup.
+[command]/usr/bin/git version
+git version 2.55.0
+Temporarily overriding HOME='/home/runner/work/_temp/4dca9d14-0969-47d4-8f5d-07513150d3a4' before making global git config changes
+Adding repository directory to the temporary git global config as a safe directory
+[command]/usr/bin/git config --global --add safe.directory /home/runner/work/scikit-learn/scikit-learn
+Removing SSH command configuration
+[command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+[command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Removing HTTP extra header
+[command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+
+##### REAL-021 | repo=numpy/numpy | job=Pyodide test | category=other | framework=pytest
+builder.create(venv_path)
+exposed_binaries = {"cibuildwheel"}
+
+if "uv" in EXTRAS:
+    exposed_binaries.add("uv")
+clean_bin_path = builder.bin_path.parent / f"{builder.bin_path.name}.clean"
+clean_bin_path.mkdir()
+
+for path in list(builder.bin_path.iterdir()):
+    if path.stem in exposed_binaries:
+        try:
+            os.symlink(path, clean_bin_path / path.name)
+        except OSError:
+            shutil.copy2(path, clean_bin_path / path.name)
+
+cibw_bin = [p for p in builder.bin_path.glob("cibuildwheel*") if p.stem == "cibuildwheel"][0]
+
+# Build the command line
+cmd_args = [str(cibw_bin), os.environ["INPUT_PACKAGE_DIR"]]
+
+if output_dir := os.environ.get("INPUT_OUTPUT_DIR"):
+    cmd_args += ["--output-dir", output_dir]
+
+if config_file := os.environ.get("INPUT_CONFIG_FILE"):
+    cmd_args += ["--config-file", config_file]
+   [...]
+rootdir: /tmp/cibw-run-k5t2h7rz/cp314-pyodide_wasm32/test_cwd
+plugins: xdist-3.8.0
+collected 51794 items / 1 error / 2742 deselected / 37 skipped / 49052 selected
+
+==================================== ERRORS ====================================
+_______________ ERROR collecting lib/tests/test_nanfunctions.py ________________
+In lib/tests/test_nanfunctions.py::TestNanFunctions_Quantile::test_nanquantile_allnan_first_slice_dtype: function uses no argument 'func'
+=========================== short test summary info ============================
+ERROR lib/tests/test_nanfunctions.py::TestNanFunctions_Quantile - Failed: In lib/tests/test_nanfunctions.py::TestNanFunctions_Quantile::test_nanquantile_allnan_first_slice_dtype: function uses no argument 'func'
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+================ 37 skipped, 2742 deselected, 1 error in 10.17s ================
+##[endgroup]
+                                                             ✕ 23.99s
+##[error]cibuildwheel: Command     python -m pytest --pyargs numpy -m 'not slow' -W ignore::PendingDeprecationWarning -p no:cacheprovider
+ failed with code 2.
+
+##[error]Process completed with exit code 1.
+##[end-action id=__pypa_cibuildwheel.__run;outcome=failure;conclusion=failure;duration_ms=128987]
+##[start-action display=Run $env:PATH = "$env:CIBW_PREPEND_PATH%3B$env:PATH";id=__pypa_cibuildwheel.__run_2]
+##[end-action id=__pypa_cibuildwheel.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+Post job cleanup.
+##[start-action display=Run actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97;id=__e449da9e-de18-4b96-8360-335f7a6d471c.python]
+##[end-action id=__e449da9e-de18-4b96-8360-335f7a6d471c.python;outcome=skipped;conclusion=skipped;duration_ms=0]
+Post job cleanup.
+[command]/usr/bin/git version
+
+##### REAL-025 | repo=home-assistant/core | job=Run tests Python 3.14.8 (lunatone) | category=other | framework=pytest
+  TEST_GROUP: lunatone
+  SKIP_COVERAGE:
+  PYTHON_VERSION: 3.14.8
+##[endgroup]
+Python 3.14.8
+bringing up nodes...
+xdist workers: 4
+bringing up nodes...
+
+......................................                                  [38/38]
+==================================== ERRORS ====================================
+___________ ERROR collecting tests/components/lunatone/test_init.py ____________
+ImportError while importing test module '/home/runner/work/core/core/tests/components/lunatone/test_init.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../_temp/uv-python-dir/cpython-3.14.8-linux-x86_64-gnu/lib/python3.14/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/components/lunatone/test_init.py:32: in <module>
+    from tests.common import MockConfigEntry, async_fire_time_changed
+E   ModuleNotFoundError: No module named 'tests.common'
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.14.8-final-0 ________________
+
+Name                                                 Stmts   Miss  Cover   Missing
+----------------------------------------------------------------------------------
+homeassistant/components/lunatone/__init__.py           71     22    69%   40-75, 87, 94-95, 160-166
+homeassistant/components/lunatone/binary_sensor.py      41      0   100%
+homeassistant/components/lunatone/config_flow.py        70      0   100%
+homeassistant/components/lunatone/const.py               3      0   100%
+homeassistant/components/lunatone/coordinator.py       119     13    89%   51, 60-64, 99-100, 105, 160-161, 220-221, 274-275
+homeassistant/components/lunatone/diagnostics.py         7      0   100%
+homeassistant/components/lunatone/light.py             163      0   100%
+homeassistant/components/lunatone/sensor.py             74      0   100%
+----------------------------------------------------------------------------------
+TOTAL                                                  548     35    94%
+Coverage XML written to file coverage.xml
+--------------------------- snapshot report summary ----------------------------
+33 snapshots passed.
+============================== slowest durations ===============================
+
+(114 durations < 1s hidden.)
+=========================== short test summary info ============================
+ERROR tests/components/lunatone/test_init.py - ImportError while importing test module '/home/runner/work/core/core/tests/components/lunatone/test_init.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../_temp/uv-python-dir/cpython-3.14.8-linux-x86_64-gnu/lib/python3.14/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/components/lunatone/test_init.py:32: in <module>
+    from tests.common import MockConfigEntry, async_fire_time_changed
+E   ModuleNotFoundError: No module named 'tests.common'
+##[error]Process completed with exit code 1.
+##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+with:
+  name: pytest-376916-3.14.8-lunatone
+  path: pytest-*.txt
+  overwrite: true
+  if-no-files-found: warn
+  compression-level: 6
+  include-hidden-files: false
+  archive: true
+env:
+  CACHE_VERSION: 1
+
+##### REAL-031 | repo=apache/airflow | job=Provider distributions tests / Compat 3.0.6:P3.11:-amazon,celer...standard | category=other | framework=pytest
+Progress: Providers[celery]             ============================================================================== 98 passed, 100 skipped, 1 [...]
+Progress: Providers[-amazon,celery,google,standard][...]
+                                                   providers/teradata/tests/unit/teradata/triggers/test_teradata_compute_cluster.py .....
+───────────────────────────────────────────────────────────────────────────────────────── Time passed: 00:28:43 ──────────────────────────────────────────────────────────────────────────────────────────
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Progress: Providers[standard]           [...]
+                                        ======================================================================== 898 passed, 180 skipped, 1 [...]
+Progress: Providers[amazon]             ======================================================================== 5177 passed, 158 skipped, 1 [...]
+Progress: Providers[google]             .. [ 61%]
+                                        ======================================================================== 5496 passed, 75 skipped, 1 [...]
+Progress: Providers[celery]             ============================================================================== 98 passed, 100 skipped, 1 [...]
+Progress: Providers[-amazon,celery,google,standard][...]
+                                                   =========================================================== 1 failed, 17744 passed, 1147 skipped, 1 [...]
+───────────────────────────────────────────────────────────────────────────────────────── Time passed: 00:29:03 ──────────────────────────────────────────────────────────────────────────────────────────
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Progress: Providers[standard]           [...]
+                                        ======================================================================== 898 passed, 180 skipped, 1 [...]
+Progress: Providers[amazon]             ======================================================================== 5177 passed, 158 skipped, 1 [...]
+Progress: Providers[google]             .. [ 61%]
+                                        ======================================================================== 5496 passed, 75 skipped, 1 [...]
+Progress: Providers[celery]             ============================================================================== 98 passed, 100 skipped, 1 [...]
+Progress: Providers[-amazon,celery,google,standard][...]
+                                                   =========================================================== 1 failed, 17744 passed, 1147 skipped, 1 [...]
+───────────────────────────────────────────────────────────────────────────────────────── Time passed: 00:29:23 ──────────────────────────────────────────────────────────────────────────────────────────
+Dumping container logs
+
+Working directory /home/runner/work/airflow/airflow
+
+
+docker ps --all --format '{{.Names}}'
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Progress: Providers[standard]           [...]
+                                        ======================================================================== 898 passed, 180 skipped, 1 [...]
+Progress: Providers[amazon]             ======================================================================== 5177 passed, 158 skipped, 1 [...]
+Progress: Providers[google]             .. [ 61%]
+                                        ======================================================================== 5496 passed, 75 skipped, 1 [...]
+Progress: Providers[celery]             ============================================================================== 98 passed, 100 skipped, 1 [...]
+Progress: Providers[-amazon,celery,google,standard][...]
+                                                   =========================================================== 1 failed, 17744 passed, 1147 skipped, 1 [...]
+───────────────────────────────────────────────────────────────────────────────────────── Time passed: 00:29:43 ──────────────────────────────────────────────────────────────────────────────────────────
+##[endgroup]
+
+Completed 5 out of 5 (100%).
+
+
+NOK for Test: Providers[-amazon,celery,google,standard]: Return code: 1.
+OK  for Test: Providers[amazon].
+OK  for Test: Providers[celery].
+OK  for Test: Providers[google].
+OK  for Test: Providers[standard].
+
+   [...]
+providers/apache/hive/tests/unit/apache/hive/transfers/test_s3_to_hive.py .......                                                                                                                  [  4%]
+providers/apache/hive/tests/unit/apache/hive/transfers/test_vertica_to_hive.py .                                                                                                                   [  4%]
+providers/apache/iceberg/tests/unit/apache/iceberg/hooks/test_iceberg.py ...............................                                                                                           [  4%]
+providers/apache/iceberg/tests/unit/apache/iceberg/triggers/test_iceberg.py ..............s.....                                                                                                   [  4%]
+providers/apache/impala/tests/unit/apache/impala/hooks/test_impala.py ...........                                                                                                                  [  4%]
+providers/apache/impala/tests/unit/apache/impala/hooks/test_impala_sql.py ............                                                                                                             [  4%]
+providers/apache/kafka/tests/unit/apache/kafka/assets/test_kafka.py ......                                                                                                                         [  4%]
+providers/apache/kafka/tests/unit/apache/kafka/hooks/test_base.py ...........................                                                                                                      [  5%]
+providers/apache/kafka/tests/unit/apache/kafka/hooks/test_client.py .....                                                                                                                          [  5%]
+providers/apache/kafka/tests/unit/apache/kafka/hooks/test_consume.py ...                                                                                                                           [  5%]
+providers/apache/kafka/tests/unit/apache/kafka/hooks/test_produce.py ..                                                                                                                            [  5%]
+providers/apache/kafka/tests/unit/apache/kafka/operators/test_consume.py .............................                                                                                             [  5%]
+providers/apache/kafka/tests/unit/apache/kafka/operators/test_produce.py .%3|1792481615.474|FAIL|rdkafka#producer-4| [thrd:localhost:9092/bootstrap]: localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 0ms in state CONNECT)
+..                                                                                                                       [  5%]
+providers/apache/kafka/tests/unit/apache/kafka/plugins/test_event_producer.py ...................................                                                                                  [  5%]
+providers/apache/kafka/tests/unit/apache/kafka/queues/test_kafka.py ..............                                                                                                                 [  5%]
+providers/apache/kafka/tests/unit/apache/kafka/sensors/test_await_message.py .                                                                                                                     [  5%]
+providers/apache/kafka/tests/unit/apache/kafka/sensors/test_kafka.py .........                                                                                                                     [  5%]
+providers/apache/kafka/tests/unit/apache/kafka/triggers/test_await_message.py ...........                                                                                                          [  5%]
+providers/apache/kafka/tests/unit/apache/kafka/triggers/test_msg_queue.py ...                                                                                                                      [  5%]
+providers/apache/kylin/tests/unit/apache/kylin/hooks/test_kylin.py ..                                                                                                                              [  5%]
+providers/apache/kylin/tests/unit/apache/kylin/operators/test_kylin_cube.py .....                                                                                                                  [  5%]
+providers/apache/livy/tests/unit/apache/livy/hooks/test_livy.py .................................................................................................................................. [  6%]
+                                                                                                                                                                                                   [  6%]
+providers/apache/livy/tests/unit/apache/livy/operators/test_livy.py ...................sssssssssssss                                                                                               [  6%]
+   [...]
+providers/yandex/tests/unit/yandex/utils/test_credentials.py .........                                                                                                                             [ 99%]
+providers/yandex/tests/unit/yandex/utils/test_fields.py ....                                                                                                                                       [ 99%]
+providers/yandex/tests/unit/yandex/utils/test_user_agent.py ..                                                                                                                                     [ 99%]
+providers/ydb/tests/unit/ydb/hooks/test_ydb.py .....                                                                                                                                               [ 99%]
+providers/ydb/tests/unit/ydb/operators/test_ydb.py ..                                                                                                                                              [ 99%]
+providers/ydb/tests/unit/ydb/utils/test_credentials.py .......                                                                                                                                     [ 99%]
+providers/zendesk/tests/unit/zendesk/hooks/test_zendesk.py .................                                                                                                                       [100%]
+
+================================================================================================ FAILURES ================================================================================================
+_____________________________________________________________________ TestVendorContract.test_the_calls_behind_the_tools_still_exist _____________________________________________________________________
+providers/common/ai/tests/unit/common/ai/sandbox/test_modal.py:147: in test_the_calls_behind_the_tools_still_exist
+    from modal.sandbox import _SandboxFilesystem
+E   ImportError: cannot import name '_SandboxFilesystem' from 'modal.sandbox' (/usr/python/lib/python3.11/site-packages/modal/sandbox/__init__.py)
+------------------------------------------------------------ generated xml file: /files/test_result-providers_-amazon_celery_googl-sqlite.xml ------------------------------------------------------------
+========================================================================================= slowest 100 durations ==========================================================================================
+19.99s call     providers/cncf/kubernetes/tests/unit/cncf/kubernetes/executors/test_kubernetes_executor.py::TestKubernetesExecutor::test_watchers_under_multi_namespace_mode[multi_namespace_mode_namespace_list0-watchers_keys0]
+19.62s call     providers/cncf/kubernetes/tests/unit/cncf/kubernetes/executors/test_kubernetes_executor.py::TestKubernetesExecutor::test_run_next_applies_job_kube_image[job-image-wins]
+19.51s call     providers/cncf/kubernetes/tests/unit/cncf/kubernetes/executors/test_kubernetes_executor.py::TestKubernetesExecutor::test_watchers_under_multi_namespace_mode[None-watchers_keys1]
+19.39s call     providers/cncf/kubernetes/tests/unit/cncf/kubernetes/executors/test_kubernetes_executor.py::TestKubernetesExecutor::test_run_next_applies_job_kube_image[falls-back-to-kube_config]
+18.89s call     providers/common/ai/tests/unit/common/ai/durable/test_fingerprint.py::TestDigestsAcrossHashSeeds::test_the_seeds_iterate_a_set_in_different_orders
+10.03s call     providers/common/ai/tests/unit/common/ai/operators/test_llm_sql.py::TestDataFusionOptionalDependency::test_object_storage_error_explains_how_to_install_datafusion
+8.41s call     providers/common/ai/tests/unit/common/ai/operators/test_llm_sql.py::TestDataFusionOptionalDependency::test_relational_sql_imports_do_not_require_datafusion
+8.08s call     providers/apache/beam/tests/unit/apache/beam/hooks/test_beam.py::TestBeamAsyncHook::test_beam_version
+7.78s call     providers/snowflake/tests/unit/snowflake/decorators/test_snowpark.py::TestSnowparkDecorator::test_snowpark_decorator_with_param
+7.11s call     providers/cncf/kubernetes/tests/unit/cncf/kubernetes/operators/test_pod.py::TestKubernetesPodOperator::test_await_container_completion_retries_on_specific_exception[side_effect1-ApiException-True]
+   [...]
+2.01s call     providers/cncf/kubernetes/tests/unit/cncf/kubernetes/utils/test_pod_manager.py::TestPodManager::test_fetch_container_logs_failures
+2.01s call     providers/microsoft/azure/tests/unit/microsoft/azure/operators/test_container_instances.py::TestACIOperator::test_execute_with_messages_last_log_in_xcom_logs
+2.01s call     providers/docker/tests/unit/docker/operators/test_docker_swarm.py::TestDockerSwarmOperator::test_execute
+=============================================================================== Warning summary. Total: 1,757, Unique: 292 ===============================================================================
+airflow: total 404, unique 40
+  runtest: total 404, unique 40
+other: total 1,119, unique 27
+  runtest: total 1,119, unique 27
+tests: total 234, unique 225
+  runtest: total 234, unique 225
+Warnings saved into /files/warnings-providers_-amazon_celery_googl-sqlite.txt file.
+======================================================================================== short test summary info =========================================================================================
+FAILED providers/common/ai/tests/unit/common/ai/sandbox/test_modal.py::TestVendorContract::test_the_calls_behind_the_tools_still_exist - ImportError: cannot import name '_SandboxFilesystem' from 'modal.sandbox' (/usr/python/lib/python3.11/site-packages/modal/sandbox/__init__.py)
+=========================================================== 1 failed, 17744 passed, 1147 skipped, 1 xfailed, 2 warnings in 1378.77s (0:22:58) ============================================================
+
+
+##### REAL-037 | repo=pallets/flask | job=Development Versions | category=missing_dependency | framework=pytest
+ + blinker==1.10.0.dev0 (from https://github.com/pallets-eco/blinker/archive/refs/heads/main.tar.gz)
+ - click==8.4.2
+ + click==8.6.0.dev0 (from https://github.com/pallets/click/archive/refs/heads/main.tar.gz)
+ - itsdangerous==2.2.0
+ + itsdangerous==2.3.0.dev0 (from https://github.com/pallets/itsdangerous/archive/refs/heads/main.tar.gz)
+ - jinja2==3.1.6
+ + jinja2==3.2.0.dev0 (from https://github.com/pallets/jinja/archive/refs/heads/main.tar.gz)
+ - markupsafe==3.0.3
+ + markupsafe==3.1.0.dev0 (from https://github.com/pallets/markupsafe/archive/refs/heads/main.tar.gz)
+ - werkzeug==3.1.8
+ + werkzeug==3.2.0.dev0 (from https://github.com/pallets/werkzeug/archive/refs/heads/main.tar.gz)
+tests-dev: commands[1]> pytest -v --tb=short --basetemp=/home/runner/work/flask/flask/.tox/tmp/tests-dev
+ImportError while loading conftest '/home/runner/work/flask/flask/tests/conftest.py'.
+tests/conftest.py:6: in <module>
+    from flask import Flask
+.tox/tests-dev/lib/python3.11/site-packages/flask/__init__.py:2: in <module>
+    from .app import Flask as Flask
+.tox/tests-dev/lib/python3.11/site-packages/flask/app.py:19: in <module>
+    from werkzeug.datastructures import ImmutableDict
+.tox/tests-dev/lib/python3.11/site-packages/werkzeug/datastructures/__init__.py:74: in __getattr__
+    warnings.warn(
+E   DeprecationWarning: The 'ImmutableDict' class is deprecated and will be removed in Werkzeug 4.0. Use 'collections.abc.Mapping' instead.
+tests-dev: exit 4 (0.98 seconds) /home/runner/work/flask/flask> pytest -v --tb=short --basetemp=/home/runner/work/flask/flask/.tox/tmp/tests-dev pid=2537
+  tests-dev: FAIL code 4 (4.05=setup[0.31]+cmd[2.76,0.98] seconds)
+  evaluation failed :( (4.11 seconds)
+
+##### REAL-042 | repo=vitejs/vite | job=Build&Test: node-24, windows-latest | category=flaky_race | framework=jest
+  PLAYWRIGHT_VERSION: 1.64.1
+##[endgroup]
+$ vitest run -c vitest.config.e2e.ts
+
+ RUN  v5.0.5 D:/a/vite/vite
+
+(node:3852) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+stderr | playground/tsconfig-json/__tests__/tsconfig-json.spec.ts > transformWithEsbuild > merge tsconfigRaw object
+`transformWithEsbuild` is deprecated and will be removed in the future. Please migrate to `transformWithOxc`.
+
+stderr | playground/ssr/__tests__/ssr.spec.ts
+Error: transport was disconnected, cannot call "fetchModule"
+    at reviveInvokeError (file:///D:/a/vite/vite/packages/vite/dist/node/module-runner.js:552:14)
+    at Object.invoke (file:///D:/a/vite/vite/packages/vite/dist/node/module-runner.js:626:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async SSRCompatModuleRunner.getModuleInformation (file:///D:/a/vite/vite/packages/vite/dist/node/module-runner.js:1217:7)
+    at async SSRCompatModuleRunner.import (file:///D:/a/vite/vite/packages/vite/dist/node/module-runner.js:1138:23)
+    at async instantiateModule (file:///D:/a/vite/vite/packages/vite/dist/node/chunks/node.js:15886:10)
+    at D:/a/vite/vite/playground-temp/ssr/server.js:49:23 {
+  runnerError: Error: RunnerError
+      at reviveInvokeError (file:///D:/a/vite/vite/packages/vite/dist/node/module-runner.js:553:64)
+      at Object.invoke (file:///D:/a/vite/vite/packages/vite/dist/node/module-runner.js:626:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async SSRCompatModuleRunner.getModuleInformation (file:///D:/a/vite/vite/packages/vite/dist/node/module-runner.js:1217:7)
+      at async SSRCompatModuleRunner.import (file:///D:/a/vite/vite/packages/vite/dist/node/module-runner.js:1138:23)
+      at async instantiateModule (file:///D:/a/vite/vite/packages/vite/dist/node/chunks/node.js:15886:10)
+      at D:/a/vite/vite/playground-temp/ssr/server.js:49:23
+}
+
+·······················-·················--······················-···························--·············-----·······--·········x············--------·································································-·····················-------·······················································································-···················-···········-····························---····-···········································································-··--·-··············---······-··········-···········-·············--····················--·····················-···········--·························-···········--·································-··--··········--------··---····----------------······-····--··-····-·-·······················-············----··························································--················--·····-············-········································-----···----······-·--·-·····-·····································--·-··-·············································---····----··---······--·········--·····-·--·----··--·················----------------······-···············-························-·-······-·····---·-·-······-··-·-···········································································--·····················-········-···························-·····---·-
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  playground/hmr-ssr/__tests__/hmr-ssr.spec.ts > hmr works correctly > hot data persists across module instances
+Error: Timeout waiting for console logs. Waiting for: >>> vite:beforeUpdate -- update
+ ❯ Timeout._onTimeout playground/hmr-ssr/__tests__/hmr-ssr.spec.ts:1093:9
+    1091|         : target
+    1092|       reject(
+    1093|         new Error(
+       |         ^
+    1094|           `Timeout waiting for console logs. Waiting for: ${nextTarget…
+    1095|         ),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 93 passed | 18 skipped (112)
+      Tests  1 failed | 1172 passed | 182 skipped (1355)
+   Start at  07:58:42
+   Duration  72.70s (tests 68%, setup 29%, import 2%, transform 1%)
+
+    Isolate  112 workers spawned · ~134ms startup each (spawn + environment, per file)
+             at least ~4.86s faster with isolate: false — reuses workers across files instead of one per file
+
+[ELIFECYCLE] Command failed with exit code 1.
+##[error]Process completed with exit code 1.
+Post job cleanup.
+##[group]Running pnpm store prune...
+[command]C:\Users\runneradmin\setup-pnpm\pnpm.exe store prune
+Removed 3810 files (11430143 bytes)
+
+##### REAL-048 | repo=vuejs/core | job=test / e2e-test | category=assertion_mismatch | framework=jest
+     ✓ composition  717ms
+ ✓  e2e  packages/vue/__tests__/e2e/trusted-types.spec.ts (3 tests) 1616ms
+     ✓ should render the hello world app  341ms
+     ✓ should accept v-html with custom policy  310ms
+ ✓  e2e  packages/vue/__tests__/e2e/commits.spec.ts (2 tests) 1936ms
+     ✓ classic  644ms
+     ✓ composition  517ms
+ ✓  e2e  packages/vue/__tests__/e2e/markdown.spec.ts (2 tests) 1560ms
+     ✓ classic  453ms
+     ✓ composition  525ms
+ ✓  e2e  packages/vue/__tests__/e2e/vModel.spec.ts (1 test) 943ms
+   ✓ checkbox click with v-model  304ms
+ ❯  e2e-browser (chromium)  packages/vue/__tests__/e2e/Transition.spec.ts (61 tests | 1 failed) 17907ms
+       ✓ basic transition 297ms
+       ✓ named transition 229ms
+       ✓ custom transition classes 178ms
+       ✓ transition with dynamic name 183ms
+       ✓ transition events without appear 185ms
+       ✓ events with arguments  448ms
+       ✓ onEnterCancelled 117ms
+       ✓ transition on appear 282ms
+       ✓ transition events with appear 269ms
+       ✓ css: false 10ms
+       ✓ no transition detected 50ms
+       ✓ animations 239ms
+   [...]
+     ✓ HOC w/ merged hooks 2ms
+     ✓ should work with dev root fragment 176ms
+     ✓ prevent enter when leaving 75ms
+       ✓ switching VNodes  3010ms
+       ✓ switching deep vnodes edge case  2160ms
+     ✓ out-in with comments around a component root (KeepAlive: false)  370ms
+     ✓ out-in with comments around a component root (KeepAlive: true)  367ms
+     ✓ should finish enter classes when a component updates its own root 83ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL   e2e-browser (chromium)  packages/vue/__tests__/e2e/Transition.spec.ts > e2e: Transition > transition with KeepAlive > switch and update child then update include (out-in mode)
+AssertionError: expected '<div class="test-anim-enter-active te…' to be '<div class="">CompA</div>' // Object.is equality
+
+Failure screenshot:
+  - packages/vue/__tests__/e2e/__screenshots__/Transition.spec.ts/e2e--Transition-transition-with-KeepAlive-switch-and-update-child-then-update-include--out-in-mode--1.png
+
+Expected: "<div class="">CompA</div>"
+Received: "<div class="test-anim-enter-active test-anim-enter-to">CompA</div>"
+
+ ❯ packages/vue/__tests__/e2e/Transition.spec.ts:1706:41
+    1704|         await transitionFinish()
+    1705|         await transitionFinish()
+    1706|         expect(await html('#container')).toBe('<div class="">CompA</di…
+       |                                         ^
+    1707|
+    1708|         expect(onUnmountedSpyB).toBeCalledTimes(1)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 12 passed (13)
+      Tests  1 failed | 119 passed (120)
+   Start at  13:44:25
+   Duration  21.41s (transform 2.05s, setup 643ms, import 4.97s, tests 59.07s, environment 13.58s)
+
+
+##[error]AssertionError: expected '<div class="test-anim-enter-active te…' to be '<div class="">CompA</div>' // Object.is equality
+
+Expected: "<div class="">CompA</div>"
+Received: "<div class="test-anim-enter-active test-anim-enter-to">CompA</div>"
+
+ ❯ packages/vue/__tests__/e2e/Transition.spec.ts:1706:41
+
+
+[ELIFECYCLE] Command failed with exit code 1.
+##[error]Process completed with exit code 1.
+Post job cleanup.
+Pruning is unnecessary.
+Post job cleanup.
+
+##### REAL-054 | repo=expressjs/express | job=Node.js 16 - ubuntu-latest | category=config_or_env | framework=mocha
+        ✔ should respond with 400 bad request
+      with an invalid api key
+        ✔ should respond with 401 unauthorized
+      with a valid api key
+        ✔ should respond user repos json
+        ✔ should 404 with unknown user
+    when requesting an invalid route
+      ✔ should respond with 404 json
+
+
+  1267 passing (3s)
+  2 pending
+  1 failing
+
+  1) node:http pass-through
+       res
+         should support res.writeEarlyHints():
+
+      Uncaught AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+false !== true
+
+      + expected - actual
+
+      -false
+      +true
+
+      at IncomingMessage.<anonymous> (test/http.native.js:172:20)
+      at IncomingMessage.emit (node:events:525:35)
+      at endReadableNT (node:internal/streams/readable:1358:12)
+      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+
+##### REAL-056 | repo=spring-projects/spring-boot | job=Build Pull Request | category=build_or_compile | framework=gradle
+> Task :module:spring-boot-jersey:checkTestFixturesRuntimeClasspathForProhibitedDependencies
+> Task :module:spring-boot-jersey:checkTestRuntimeClasspathForProhibitedDependencies
+> Task :module:spring-boot-jms:compileTestJava FROM-CACHE
+> Task :documentation:spring-boot-docs:compileJava
+> Task :module:spring-boot-integration:test
+> Task :module:spring-boot-integration:check
+> Task :module:spring-boot-integration:build
+> Task :module:spring-boot-jersey:testClasses
+[ant:checkstyle] [ERROR] /home/runner/work/spring-boot/spring-boot/module/spring-boot-jersey/src/main/java/org/springframework/boot/jersey/autoconfigure/JerseyJacksonAutoConfiguration.java:3: Line does not match expected header line of '^\Q */\E$'. [SpringHeader]
+
+> Task :module:spring-boot-jersey:checkstyleMain
+
+> Task :module:spring-boot-jersey:checkstyleMain FAILED
+[ant:checkstyle] [ERROR] /home/runner/work/spring-boot/spring-boot/module/spring-boot-jersey/src/test/java/org/springframework/boot/jersey/autoconfigure/JerseyJackson2AutoConfigurationTests.java:3: Line does not match expected header line of '^\Q */\E$'. [SpringHeader]
+
+[ant:checkstyle] [ERROR] /home/runner/work/spring-boot/spring-boot/module/spring-boot-jersey/src/test/java/org/springframework/boot/jersey/autoconfigure/JerseyJacksonAutoConfigurationIntegrationTests.java:3: Line does not match expected header line of '^\Q */\E$'. [SpringHeader]
+> Task :module:spring-boot-jersey:checkstyleTest
+[ant:checkstyle] [ERROR] /home/runner/work/spring-boot/spring-boot/module/spring-boot-jersey/src/test/java/org/springframework/boot/jersey/autoconfigure/JerseyAutoConfigurationJackson2ObjectMapperProviderTests.java:3: Line does not match expected header line of '^\Q */\E$'. [SpringHeader]
+[ant:checkstyle] [ERROR] /home/runner/work/spring-boot/spring-boot/module/spring-boot-jersey/src/test/java/org/springframework/boot/jersey/autoconfigure/JerseyJackson3OnlyIntegrationTests.java:3: Line does not match expected header line of '^\Q */\E$'. [SpringHeader]
+[ant:checkstyle] [ERROR] /home/runner/work/spring-boot/spring-boot/module/spring-boot-jersey/src/test/java/org/springframework/boot/jersey/autoconfigure/JerseyAutoConfigurationCustomJackson2ObjectMapperProviderTests.java:3: Line does not match expected header line of '^\Q */\E$'. [SpringHeader]
+
+> Task :module:spring-boot-jersey:checkstyleTest FAILED
+> Task :module:spring-boot-jersey:checkstyleNohttp
+
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1792343261999.json
+FAILURE: Build completed with 2 failures.
+
+1: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':module:spring-boot-jersey:checkstyleMain' (registered by plugin class 'org.gradle.api.plugins.quality.CheckstylePlugin').
+> A failure occurred while executing org.gradle.api.plugins.quality.internal.CheckstyleInvoker
+   > Checkstyle rule violations were found. See the report at: file:///home/runner/work/spring-boot/spring-boot/module/spring-boot-jersey/build/reports/checkstyle/main.html
+     Checkstyle files with violations: 1
+
+##### REAL-062 | repo=junit-team/junit5 | job=Cross-Version / OpenJ9 25 | category=build_or_compile | framework=gradle
+  location: record component methodInfo of type MethodInfo
+
+> Task :documentation:compileTestJava FROM-CACHE
+> Task :documentation:testClasses
+> Task :documentation:checkstyleTest FROM-CACHE
+> Task :junit-platform-suite:classes UP-TO-DATE
+> Task :junit-platform-suite:jar
+> Task :junit-platform-testkit:classes UP-TO-DATE
+##[error]/home/runner/work/junit-framework/junit-framework/documentation/src/tools/java/org/junit/api/tools/ApiReportGenerator.java:153: error: cannot find symbol
+			classGraph = classGraph.overrideModuleLayers(layer);
+
+			                       ^
+> Task :documentation:compileToolsJava FAILED
+  symbol:   method overrideModuleLayers(ModuleLayer)
+  location: variable classGraph of type ClassGraph
+##[error]/home/runner/work/junit-framework/junit-framework/documentation/src/tools/java/org/junit/api/tools/ApiReportGenerator.java:160: error: cannot find symbol
+				.filter(it -> !it.getAnnotationInfo(API.class).isInherited()) //
+				                 ^
+  symbol:   method getAnnotationInfo(Class<API>)
+  location: variable it of type ClassInfo
+##[error]/home/runner/work/junit-framework/junit-framework/documentation/src/tools/java/org/junit/api/tools/ApiReportGenerator.java:176: error: cannot find symbol
+				.filter(m -> m.getAnnotationInfo(API.class) != null);
+				              ^
+  symbol:   method getAnnotationInfo(Class<API>)
+  location: variable m of type MethodInfo
+
+##### REAL-068 | repo=quarkusio/quarkus | job=JDK Build | category=resource_exhaustion | framework=gradle
+Response body doesn't match expectation.
+Expected: is "{\"id\":5,\"name\":\"Aloi\"}"
+  Actual: {"details":"Error id 90a312cb-f880-46ab-865b-ee9fbe945e96-5, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+	at org.codehaus.groovy.vmplugin.v8.IndyInterface.fromCache(IndyInterface.java:344)
+	at io.restassured.internal.ResponseSpecificationImpl$HamcrestAssertionClosure.validate(ResponseSpecificationImpl.groovy:527)
+	at org.codehaus.groovy.vmplugin.v8.IndyInterface.fromCache(IndyInterface.java:344)
+	at io.restassured.internal.ResponseSpecificationImpl.validateResponseIfRequired(ResponseSpecificationImpl.groovy:725)
+	at org.codehaus.groovy.vmplugin.v8.IndyInterface.fromCache(IndyInterface.java:344)
+	at io.restassured.internal.ResponseSpecificationImpl.body(ResponseSpecificationImpl.groovy:112)
+	at io.restassured.internal.ValidatableResponseOptionsImpl.body(ValidatableResponseOptionsImpl.java:238)
+	at io.quarkus.it.hibernate.reactive.db2.HibernateReactiveDB2Test.reactiveFindMutiny(HibernateReactiveDB2Test.java:21)
+	Suppressed: io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3
+
+2026-10-20 05:36:09,955 INFO  [io.quarkus.vertx.netty-cleanup] (main) Cleaning up Netty InternalThreadLocalMap
+2026-10-20 05:36:09,955 INFO  [io.quarkus] (main) quarkus-integration-test-hibernate-reactive-db2 stopped in 0.029s
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR] io.quarkus.it.hibernate.reactive.db2.HibernateReactiveDB2Test.reactiveFindMutiny
+[ERROR]   Run 1: HibernateReactiveDB2Test.reactiveFindMutiny:21 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "{\"id\":5,\"name\":\"Aloi\"}"
+  Actual: {"details":"Error id e9e244a6-fba6-4e68-a394-6a54e292a8f9-5, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[ERROR]   Run 2: HibernateReactiveDB2Test.reactiveFindMutiny:21 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "{\"id\":5,\"name\":\"Aloi\"}"
+  Actual: {"details":"Error id 881aebdf-5023-452e-b8ad-f90f35286a84-5, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[ERROR]   Run 3: HibernateReactiveDB2Test.reactiveFindMutiny:21 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "{\"id\":5,\"name\":\"Aloi\"}"
+  Actual: {"details":"Error id be2d26cf-fa6e-47b6-94ef-31b032086c9e-5, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[ERROR]   Run 4: HibernateReactiveDB2Test.reactiveFindMutiny:21 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "{\"id\":5,\"name\":\"Aloi\"}"
+  Actual: {"details":"Error id 90a312cb-f880-46ab-865b-ee9fbe945e96-5, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[INFO]
+[ERROR] io.quarkus.it.hibernate.reactive.db2.HibernateReactiveDB2Test.reactivePersist
+[ERROR]   Run 1: HibernateReactiveDB2Test.reactivePersist:29 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "Tulip"
+  Actual: {"details":"Error id e9e244a6-fba6-4e68-a394-6a54e292a8f9-1, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[ERROR]   Run 2: HibernateReactiveDB2Test.reactivePersist:29 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "Tulip"
+  Actual: {"details":"Error id 881aebdf-5023-452e-b8ad-f90f35286a84-1, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[ERROR]   Run 3: HibernateReactiveDB2Test.reactivePersist:29 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "Tulip"
+  Actual: {"details":"Error id be2d26cf-fa6e-47b6-94ef-31b032086c9e-1, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[ERROR]   Run 4: HibernateReactiveDB2Test.reactivePersist:29 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "Tulip"
+  Actual: {"details":"Error id 90a312cb-f880-46ab-865b-ee9fbe945e96-1, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[INFO]
+[ERROR] io.quarkus.it.hibernate.reactive.db2.HibernateReactiveDB2Test.reactiveRemoveManagedEntity
+[ERROR]   Run 1: HibernateReactiveDB2Test.reactiveRemoveManagedEntity:45 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "OK"
+  Actual: {"details":"Error id e9e244a6-fba6-4e68-a394-6a54e292a8f9-2, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[ERROR]   Run 2: HibernateReactiveDB2Test.reactiveRemoveManagedEntity:45 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "OK"
+  Actual: {"details":"Error id 881aebdf-5023-452e-b8ad-f90f35286a84-3, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[ERROR]   Run 3: HibernateReactiveDB2Test.reactiveRemoveManagedEntity:45 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "OK"
+  Actual: {"details":"Error id be2d26cf-fa6e-47b6-94ef-31b032086c9e-3, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[ERROR]   Run 4: HibernateReactiveDB2Test.reactiveRemoveManagedEntity:45 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "OK"
+  Actual: {"details":"Error id 90a312cb-f880-46ab-865b-ee9fbe945e96-3, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[INFO]
+[ERROR] io.quarkus.it.hibernate.reactive.db2.HibernateReactiveDB2Test.reactiveRemoveTransientEntity
+[ERROR]   Run 1: HibernateReactiveDB2Test.reactiveRemoveTransientEntity:37 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "OK"
+  Actual: {"details":"Error id e9e244a6-fba6-4e68-a394-6a54e292a8f9-4, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[ERROR]   Run 2: HibernateReactiveDB2Test.reactiveRemoveTransientEntity:37 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "OK"
+  Actual: {"details":"Error id 881aebdf-5023-452e-b8ad-f90f35286a84-4, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[ERROR]   Run 3: HibernateReactiveDB2Test.reactiveRemoveTransientEntity:37 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "OK"
+  Actual: {"details":"Error id be2d26cf-fa6e-47b6-94ef-31b032086c9e-4, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[ERROR]   Run 4: HibernateReactiveDB2Test.reactiveRemoveTransientEntity:37 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "OK"
+  Actual: {"details":"Error id 90a312cb-f880-46ab-865b-ee9fbe945e96-4, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[INFO]
+[ERROR] io.quarkus.it.hibernate.reactive.db2.HibernateReactiveDB2Test.reactiveUpdate
+[ERROR]   Run 1: HibernateReactiveDB2Test.reactiveUpdate:53 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "Tina"
+  Actual: {"details":"Error id e9e244a6-fba6-4e68-a394-6a54e292a8f9-3, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[ERROR]   Run 2: HibernateReactiveDB2Test.reactiveUpdate:53 1 expectation failed.
+Response body doesn't match expectation.
+Expected: is "Tina"
+  Actual: {"details":"Error id 881aebdf-5023-452e-b8ad-f90f35286a84-2, io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3","stack":"io.vertx.db2client.DB2Exception: The connection was closed by the database server., SQLCODE=-4499  SQLSTATE=08004.C.3"}
+
+[ERROR]   Run 3: HibernateReactiveDB2Test.reactiveUpdate:53 1 expectation failed.
+
+##### REAL-074 | repo=gin-gonic/gin | job=ubuntu-latest @ Go 1.26 -tags go_json | category=other | framework=go
+--- PASS: TestPusher (0.01s)
+=== RUN   TestRunEmptyWithEnv
+--- PASS: TestRunEmptyWithEnv (0.00s)
+=== RUN   TestRunTooMuchParams
+--- PASS: TestRunTooMuchParams (0.00s)
+=== RUN   TestRunWithPort
+--- PASS: TestRunWithPort (0.00s)
+=== RUN   TestUnixSocket
+--- PASS: TestUnixSocket (0.01s)
+=== RUN   TestBadUnixSocket
+--- PASS: TestBadUnixSocket (0.00s)
+=== RUN   TestRunQUIC
+2026/10/17 15:29:12 failed to sufficiently increase receive buffer size (was: 1024 kiB, wanted: 7168 kiB, got: 2048 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details.
+--- PASS: TestRunQUIC (0.01s)
+=== RUN   TestFileDescriptor
+--- PASS: TestFileDescriptor (0.01s)
+=== RUN   TestBadFileDescriptor
+--- PASS: TestBadFileDescriptor (0.00s)
+=== RUN   TestListener
+--- PASS: TestListener (0.01s)
+=== RUN   TestBadListener
+--- PASS: TestBadListener (0.00s)
+=== RUN   TestWithHttptestWithAutoSelectedPort
+--- PASS: TestWithHttptestWithAutoSelectedPort (0.00s)
+=== RUN   TestConcurrentHandleContext
+   [...]
+--- PASS: TestIssue4818_MethodNotAllowedManyTrees (0.00s)
+=== RUN   TestCountParams
+--- PASS: TestCountParams (0.00s)
+=== RUN   TestTreeAddAndGet
+--- PASS: TestTreeAddAndGet (0.00s)
+=== RUN   TestTreeWildcard
+    tree_test.go:65: Params mismatch for route '/cmd/test'
+    tree_test.go:65: Params mismatch for route '/cmd/who'
+    tree_test.go:55: handle mismatch for route '/cmd/whoami/': Expected nil handle
+    tree_test.go:65: Params mismatch for route '/cmd/whoami/'
+    tree_test.go:65: Params mismatch for route '/cmd/whoami/r/'
+    tree_test.go:65: Params mismatch for route '/search/someth!ng+in+ünìcodé/'
+--- FAIL: TestTreeWildcard (0.00s)
+=== RUN   TestUnescapeParameters
+--- PASS: TestUnescapeParameters (0.00s)
+=== RUN   TestTreeWildcardConflict
+--- PASS: TestTreeWildcardConflict (0.00s)
+=== RUN   TestCatchAllAfterSlash
+--- PASS: TestCatchAllAfterSlash (0.00s)
+=== RUN   TestTreeChildConflict
+--- PASS: TestTreeChildConflict (0.00s)
+=== RUN   TestTreeDuplicatePath
+--- PASS: TestTreeDuplicatePath (0.00s)
+=== RUN   TestEmptyWildcardName
+--- PASS: TestEmptyWildcardName (0.00s)
+   [...]
+=== RUN   TestMarshalXMLforH
+--- PASS: TestMarshalXMLforH (0.00s)
+=== RUN   TestMarshalXMLforHSuccess
+--- PASS: TestMarshalXMLforHSuccess (0.00s)
+=== RUN   TestIsASCII
+--- PASS: TestIsASCII (0.00s)
+=== RUN   TestSafeInt8
+--- PASS: TestSafeInt8 (0.00s)
+=== RUN   TestSafeUint16
+--- PASS: TestSafeUint16 (0.00s)
+FAIL
+coverage: 98.1% of statements
+FAIL	github.com/gin-gonic/gin	0.227s
+FAIL
+make: *** [Makefile:14: test] Error 1
+##[error]Process completed with exit code 2.
+Post job cleanup.
+[command]/usr/bin/git version
+git version 2.55.0
+Temporarily overriding HOME='/home/runner/work/_temp/2a51cf60-5cab-48d9-94e5-22e800850514' before making global git config changes
+Adding repository directory to the temporary git global config as a safe directory
+[command]/usr/bin/git config --global --add safe.directory /home/runner/work/gin/gin
+Removing SSH command configuration
+[command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+[command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+
+##### REAL-076 | repo=grafana/grafana | job=Grafana Enterprise (3/8) | category=build_or_compile | framework=go
+ok  	github.com/grafana/grafana-enterprise/pkg/advisor/checks/licensecheck	0.083s
+ok  	github.com/grafana/grafana-enterprise/pkg/analytics/datasources/database	1.431s
+ok  	github.com/grafana/grafana-enterprise/pkg/apiserver/auditing	0.052s
+ok  	github.com/grafana/grafana-enterprise/pkg/apiserver/hg/loaders/apppluginsecrets	0.796s
+ok  	github.com/grafana/grafana-enterprise/pkg/apiserver/routehandling	1.360s
+# github.com/grafana/grafana-enterprise/pkg/apiserver
+##[error]pkg/apiserver/group_provisioning.go:101:96: too many arguments in call to repository.NewIncrementalSyncPolicy
+	have (bool, int)
+	want (int)
+##[error]pkg/apiserver/group_provisioning.go:275:3: too many arguments in call to provisioning.NewAPIBuilder
+	have ("k8s.io/apimachinery/pkg/runtime/schema".GroupVersion, bool, bool, repository.Factory, connection.Factory, featuremgmt.FeatureToggles, "github.com/grafana/grafana/pkg/storage/unified/resource".ResourceClient, nil, nil, nil, "github.com/grafana/authlib/types".AccessClient, "github.com/grafana/grafana/pkg/infra/tracing".Tracer, []"github.com/grafana/grafana/pkg/registry/apis/provisioning".ExtraBuilder, []"github.com/grafana/grafana/pkg/registry/apis/provisioning/jobs".Worker, nil, []"github.com/grafana/grafana/apps/provisioning/pkg/apis/provisioning/v0alpha1".SyncTargetType, []"github.com/grafana/grafana/pkg/registry/apis/provisioning/resources".SupportedResource, nil, bool, "time".Duration, "github.com/prometheus/client_golang/prometheus".Registerer, func(configProvider "github.com/grafana/grafana/pkg/services/apiserver".RestConfigProvider) "github.com/grafana/grafana/pkg/registry/apis/provisioning/resources".ClientFactory, bool, "github.com/grafana/grafana/apps/provisioning/pkg/quotas".QuotaGetter, bool, repository.IncrementalSyncPolicy, int64)
+	want ("k8s.io/apimachinery/pkg/runtime/schema".GroupVersion, bool, bool, repository.Factory, connection.Factory, featuremgmt.FeatureToggles, "github.com/grafana/grafana/pkg/storage/unified/resource".ResourceClient, "github.com/grafana/grafana/pkg/services/apiserver".RestConfigProvider, dualwrite.Service, "github.com/grafana/grafana/pkg/infra/usagestats".Service, "github.com/grafana/authlib/types".AccessChecker, "github.com/grafana/grafana/pkg/infra/tracing".Tracer, []"github.com/grafana/grafana/pkg/registry/apis/provisioning".ExtraBuilder, []"github.com/grafana/grafana/pkg/registry/apis/provisioning/jobs".Worker, *"github.com/grafana/grafana/pkg/registry/apis/provisioning".JobHistoryConfig, []"github.com/grafana/grafana/apps/provisioning/pkg/apis/provisioning/v0alpha1".SyncTargetType, []"github.com/grafana/grafana/pkg/registry/apis/provisioning/resources".SupportedResource, func("context".Context) (*"k8s.io/client-go/rest".Config, error), bool, "time".Duration, "github.com/prometheus/client_golang/prometheus".Registerer, func(loopbackConfigProvider "github.com/grafana/grafana/pkg/services/apiserver".RestConfigProvider) "github.com/grafana/grafana/pkg/registry/apis/provisioning/resources".ClientFactory, bool, "github.com/grafana/grafana/apps/provisioning/pkg/quotas".QuotaGetter, repository.IncrementalSyncPolicy, int64)
+FAIL	github.com/grafana/grafana-enterprise/pkg/apiserver/tests/mt/annotations [build failed]
+ok  	github.com/grafana/grafana-enterprise/pkg/apppluginext	0.148s
+ok  	github.com/grafana/grafana-enterprise/pkg/apps/queries/pkg/apis/manifestdata	0.177s
+ok  	github.com/grafana/grafana-enterprise/pkg/apps/reporting/pkg/conversion	0.145s
+FAIL	github.com/grafana/grafana-enterprise/pkg/authn [build failed]
+ok  	github.com/grafana/grafana-enterprise/pkg/bi	0.045s
+ok  	github.com/grafana/grafana-enterprise/pkg/cachingmt/querycaching/instanceconfigloader	0.085s
+ok  	github.com/grafana/grafana-enterprise/pkg/datasource	0.439s
+ok  	github.com/grafana/grafana-enterprise/pkg/datasource/grpc	0.307s
+ok  	github.com/grafana/grafana-enterprise/pkg/embeddedapiserver/aggregator	0.205s
+ok  	github.com/grafana/grafana-enterprise/pkg/kmsproviders/hashicorpvault	0.047s
+ok  	github.com/grafana/grafana-enterprise/pkg/licensing/api	0.286s
+ok  	github.com/grafana/grafana-enterprise/pkg/pluginsintegration/gcom	0.026s
+ok  	github.com/grafana/grafana-enterprise/pkg/recordedqueries/api	1.170s
+ok  	github.com/grafana/grafana-enterprise/pkg/registry/alertrulequality	0.110s
+ok  	github.com/grafana/grafana-enterprise/pkg/registry/iam/globalrole/basicrole	0.114s
+ok  	github.com/grafana/grafana-enterprise/pkg/registry/provisioning	0.082s
