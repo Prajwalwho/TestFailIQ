@@ -1,0 +1,82 @@
+[
+  {
+    "id": "REAL-001",
+    "choice": "rag"
+  },
+  {
+    "id": "REAL-005",
+    "choice": "rag"
+  },
+  {
+    "id": "REAL-008",
+    "choice": "tie"
+  },
+  {
+    "id": "REAL-011",
+    "choice": "tie"
+  },
+  {
+    "id": "REAL-047",
+    "choice": "tie"
+  },
+  {
+    "id": "REAL-066",
+    "choice": "tie"
+  },
+  {
+    "id": "REAL-061",
+    "choice": "tie"
+  },
+  {
+    "id": "REAL-078",
+    "choice": "tie"
+  },
+  {
+    "id": "REAL-004",
+    "choice": "rag"
+  },
+  {
+    "id": "REAL-076",
+    "choice": "tie"
+  },
+  {
+    "id": "REAL-039",
+    "choice": "none"
+  },
+  {
+    "id": "REAL-062",
+    "choice": "rag"
+  },
+  {
+    "id": "REAL-041",
+    "choice": "tie"
+  },
+  {
+    "id": "REAL-020",
+    "choice": "tie"
+  },
+  {
+    "id": "REAL-081",
+    "choice": "tie"
+  },
+  {
+    "id": "REAL-064",
+    "choice": "tie"
+  },
+  {
+    "id": "REAL-079",
+    "choice": "none"
+  },
+  {
+    "id": "REAL-056",
+    "choice": "none"
+  },
+  {
+    "id": "REAL-058",
+    "choice": "rag"
+  },
+  {
+    "id": "REAL-051",
+    "choice": "tie"
+  }
+]

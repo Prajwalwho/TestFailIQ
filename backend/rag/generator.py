@@ -4,6 +4,8 @@ LLM generator — calls local Ollama to produce a root-cause diagnosis.
 The prompt contains the failing log, similar past failures and (only when strong enough) a known
 issue. Evidence is marked as possibly unrelated so the model uses it only when it clearly fits.
 If Ollama is unavailable or returns invalid output, the diagnosis falls back to the KB entry.
+
+call_llm() and _build_prompt(ask_category=True) are also used by evaluation/run_rag_ablation.py.
 """
 
 import json
@@ -24,6 +26,16 @@ FALLBACK_BAD_OUTPUT_MSG = "(KB fallback — invalid LLM output)"
 TIMEOUT = 120  # seconds
 LOG_EXCERPT_CHARS = 1500
 
+CATEGORIES = ["assertion_failure", "dependency_or_import", "build_or_compile",
+              "runtime_exception", "environment_or_infra", "other"]
+CATEGORY_LEGEND = """Categories:
+- assertion_failure: a test compared an expected value with an actual value and they differed
+- dependency_or_import: a package, module, class or library version is missing or conflicting
+- build_or_compile: the code failed to compile, type-check or build
+- runtime_exception: the code raised an unexpected exception (null, type, value, index errors)
+- environment_or_infra: timeout, network, file path, memory or disk, configuration, flaky or race problems, CI runner issues
+- other: none of the above"""
+
 
 @dataclass
 class DiagnosisResult:
@@ -43,6 +55,7 @@ class LLMDiagnosis(BaseModel):
     explanation: Optional[str] = ""
     next_steps: list[str] = Field(default_factory=list)
     fix_snippet: Optional[str] = None
+    category: Optional[str] = None  # only requested by the evaluation prompt
 
     @field_validator("next_steps", mode="before")
     @classmethod
@@ -61,7 +74,7 @@ class LLMDiagnosis(BaseModel):
         return str(v)
 
 
-def _build_prompt(parsed_log: ParsedLog, evidence: RetrievedEvidence) -> str:
+def _build_prompt(parsed_log: ParsedLog, evidence: RetrievedEvidence, ask_category: bool = False) -> str:
     similar_ctx = ""
     for i, (rec, score) in enumerate(evidence.similar_failures[:3], 1):
         similar_ctx += (
@@ -83,6 +96,10 @@ def _build_prompt(parsed_log: ParsedLog, evidence: RetrievedEvidence) -> str:
             f"  Example: {kb.fix_snippet}\n"
         )
 
+    category_block = f"\n{CATEGORY_LEGEND}\n" if ask_category else ""
+    category_field = (
+        f'  "category": "exactly one of: {", ".join(CATEGORIES)}",\n' if ask_category else ""
+    )
     excerpt = parsed_log.raw_log[:LOG_EXCERPT_CHARS]
     return f"""You are an expert at diagnosing failing CI tests.
 
@@ -102,14 +119,35 @@ Error: {parsed_log.error_type}: {parsed_log.error_message}
 === INSTRUCTIONS ===
 Diagnose THIS failure from the log. Use a past failure or the known issue only if it clearly matches the
 error above; if it does not match, ignore it. Do not invent details that are not in the log.
-Return valid JSON with exactly this schema:
+{category_block}Return valid JSON with exactly this schema:
 {{
   "root_cause": "1-2 sentences",
-  "explanation": "2-4 sentences",
+{category_field}  "explanation": "2-4 sentences",
   "next_steps": ["step 1", "step 2", "step 3"],
   "fix_snippet": "short code or command, or an empty string"
 }}
 Only output the JSON object."""
+
+
+def call_llm(prompt: str, num_predict: int = 800, temperature: float = 0.2, seed: Optional[int] = None) -> dict:
+    """Call Ollama and return the validated diagnosis as a dict. Raises on any failure."""
+    options = {"temperature": temperature, "num_predict": num_predict}
+    if seed is not None:
+        options["seed"] = seed
+    response = httpx.post(
+        OLLAMA_URL,
+        json={
+            "model": OLLAMA_MODEL,
+            "prompt": prompt,
+            "stream": False,
+            "format": "json",
+            "keep_alive": "30m",
+            "options": options,
+        },
+        timeout=TIMEOUT,
+    )
+    response.raise_for_status()
+    return LLMDiagnosis.model_validate(json.loads(response.json()["response"])).model_dump()
 
 
 def _confidence(evidence: RetrievedEvidence) -> float:
@@ -122,20 +160,7 @@ def generate_diagnosis(parsed_log: ParsedLog, evidence: RetrievedEvidence) -> Di
     model_used = OLLAMA_MODEL
 
     try:
-        response = httpx.post(
-            OLLAMA_URL,
-            json={
-                "model": OLLAMA_MODEL,
-                "prompt": prompt,
-                "stream": False,
-                "format": "json",
-                "keep_alive": "30m",
-                "options": {"temperature": 0.2, "num_predict": 800},
-            },
-            timeout=TIMEOUT,
-        )
-        response.raise_for_status()
-        data = LLMDiagnosis.model_validate(json.loads(response.json()["response"])).model_dump()
+        data = call_llm(prompt)
     except httpx.HTTPError as e:  # connection refused, timeout, 404/500 from Ollama
         print(f"[Generator] Ollama request failed: {type(e).__name__}: {e}")
         data = _fallback_from_evidence(evidence)

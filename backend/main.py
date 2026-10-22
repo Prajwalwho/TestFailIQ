@@ -3,28 +3,39 @@ FastAPI application — Test Failure Investigation Assistant backend.
 """
 
 import json
-from contextlib import asynccontextmanager
 import os
 import sys
 import uuid
+from contextlib import asynccontextmanager
 from datetime import datetime
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 # Add backend dir to path so imports work
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+from evaluation.metrics import compute_metrics
 from ingestion.log_parser import parse_log
+from rag.generator import generate_diagnosis
+from rag.retriever import retrieve
+from storage.diagnosis_store import get_diagnosis_store
 from storage.faiss_store import FailureRecord, get_store
 from storage.knowledge_base import get_kb
-from storage.diagnosis_store import get_diagnosis_store
-from rag.retriever import retrieve
-from rag.generator import generate_diagnosis
-from evaluation.metrics import compute_metrics
 
+DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+EVAL_RESULTS_PATH = os.path.join(DATA_DIR, "eval_results.json")
+MAX_LOG_CHARS = 200_000
+ALLOWED_ORIGINS = [
+    o.strip()
+    for o in os.environ.get("CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
+    if o.strip()
+]
+
+
+# ── Startup ──────────────────────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Pre-load models and index synthetic logs on first run."""
@@ -44,30 +55,16 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-# ── Startup ──────────────────────────────────────────────────────────────────
-@app.on_event("startup")
-async def startup():
-    """Pre-load models and index synthetic logs on first run."""
-    store = get_store()
-    kb = get_kb()
-
-    # Auto-ingest synthetic logs if store is empty
-    if store.size == 0:
-        _ingest_synthetic_logs(store)
-
-
 def _ingest_synthetic_logs(store):
     """Ingest all synthetic logs from the metadata index."""
-    meta_path = os.path.join(
-        os.path.dirname(__file__), "data", "synthetic_logs_metadata.json"
-    )
+    meta_path = os.path.join(DATA_DIR, "synthetic_logs_metadata.json")
     if not os.path.exists(meta_path):
         print("[Startup] No synthetic logs found. Run data/generate_synthetic_logs.py first.")
         return
@@ -99,9 +96,9 @@ def _ingest_synthetic_logs(store):
     print(f"[Startup] Indexed {len(logs)} synthetic logs.")
 
 
-# ── Schemas ───────────────────────────────────────────────────────────────────
+# ── Schemas ──────────────────────────────────────────────────────────────────
 class IngestRequest(BaseModel):
-    log_text: str
+    log_text: str = Field(min_length=1, max_length=MAX_LOG_CHARS)
     test_name: Optional[str] = None
     module: Optional[str] = None
     known_issue_id: Optional[str] = None
@@ -109,10 +106,10 @@ class IngestRequest(BaseModel):
 
 
 class DiagnoseRequest(BaseModel):
-    log_text: str
+    log_text: str = Field(min_length=1, max_length=MAX_LOG_CHARS)
     test_name: Optional[str] = None
     module: Optional[str] = None
-    top_k: int = 5
+    top_k: int = Field(default=5, ge=1, le=20)
 
 
 class FeedbackRequest(BaseModel):
@@ -120,7 +117,7 @@ class FeedbackRequest(BaseModel):
     feedback: str  # "correct" | "incorrect"
 
 
-# ── Routes ────────────────────────────────────────────────────────────────────
+# ── Routes ───────────────────────────────────────────────────────────────────
 @app.get("/api/health")
 def health():
     store = get_store()
@@ -180,6 +177,7 @@ def diagnose(req: DiagnoseRequest):
             "module": parsed.module,
             "error_type": parsed.error_type,
             "error_message": parsed.error_message,
+            "framework": parsed.framework,
         },
         "diagnosis": {
             "root_cause": result.root_cause,
@@ -243,8 +241,7 @@ def list_failures():
 
 @app.get("/api/failures/{failure_id}")
 def get_failure(failure_id: str):
-    store = get_store()
-    record = store.get_by_id(failure_id)
+    record = get_store().get_by_id(failure_id)
     if not record:
         raise HTTPException(status_code=404, detail="Failure not found")
     return {
@@ -279,6 +276,7 @@ def list_knowledge():
                 "resolution": e.resolution,
                 "fix_snippet": e.fix_snippet,
                 "tags": e.tags,
+                "category": e.category,
             }
             for e in kb.get_all()
         ],
@@ -287,19 +285,17 @@ def list_knowledge():
 
 @app.post("/api/feedback")
 def submit_feedback(req: FeedbackRequest):
-    """Mark a diagnosis result as correct or incorrect."""
+    """Mark a diagnosis as correct or incorrect."""
     if req.feedback not in ("correct", "incorrect"):
         raise HTTPException(status_code=400, detail="feedback must be 'correct' or 'incorrect'")
-    updated = get_diagnosis_store().update_feedback(req.diagnosis_id, req.feedback)
-    if not updated:
+    if not get_diagnosis_store().update_feedback(req.diagnosis_id, req.feedback):
         raise HTTPException(status_code=404, detail="Diagnosis not found")
     return {"success": True, "diagnosis_id": req.diagnosis_id, "feedback": req.feedback}
 
-    
 
 @app.get("/api/metrics")
 def get_metrics():
-    """Return evaluation metrics."""
+    """Return the legacy self-retrieval metrics and feedback counts."""
     metrics = compute_metrics()
     return {
         "total_indexed": metrics.total_indexed,
@@ -311,6 +307,18 @@ def get_metrics():
         "retrieval_at_1": metrics.retrieval_at_1,
         "retrieval_at_3": metrics.retrieval_at_3,
     }
+
+
+@app.get("/api/eval-results")
+def get_eval_results():
+    """Held-out retrieval evaluation written by evaluation/run_eval.py (read-only; never reruns it)."""
+    if not os.path.exists(EVAL_RESULTS_PATH):
+        raise HTTPException(status_code=404, detail="No eval results yet. Run: python evaluation/run_eval.py")
+    try:
+        with open(EVAL_RESULTS_PATH, encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError) as e:
+        raise HTTPException(status_code=500, detail=f"eval_results.json could not be read ({type(e).__name__})")
 
 
 if __name__ == "__main__":

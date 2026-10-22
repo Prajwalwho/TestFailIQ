@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-10-22T17:21:51.462229+00:00",
+  "model": "llama3.2",
+  "failures_scored": 49,
+  "with_evidence": 35,
+  "chance_level": 0.306,
+  "plain_correct": 32,
+  "retrieval_correct": 35,
+  "retrieval_right_plain_wrong": 4,
+  "plain_right_retrieval_wrong": 1,
+  "sign_test_p": 0.375,
+  "ratings": {
+    "retrieval_wins": 5,
+    "plain_wins": 3,
+    "ties": 12,
+    "win_rate_among_decisive": 0.625,
+    "sign_test_p": 0.727
+  }
+}
