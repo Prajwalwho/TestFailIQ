@@ -2,8 +2,9 @@
 RAG Retriever — combines FAISS failure search + KB search.
 Returns the best evidence package for LLM generation.
 
-Relevance thresholds come from data/thresholds.json (written by evaluation/tune_thresholds.py).
-Defaults apply when the file is missing.
+Relevance thresholds come from data/thresholds.json (written by evaluation/tune_thresholds.py);
+defaults apply when the file is missing. User feedback re-orders results that already passed the
+threshold (rag/ranking.py, storage/feedback_signal.py).
 """
 
 import json
@@ -12,7 +13,9 @@ from dataclasses import dataclass
 from typing import Optional
 
 from ingestion.log_parser import ParsedLog
+from rag.ranking import rerank
 from storage.faiss_store import FailureRecord, get_store
+from storage.feedback_signal import get_adjustments
 from storage.knowledge_base import KnowledgeEntry, get_kb
 
 THRESHOLDS_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "thresholds.json")
@@ -42,10 +45,10 @@ print(f"[Retriever] thresholds: similar>={SIMILAR_MIN_SCORE} kb_display>={KB_MIN
 
 @dataclass
 class RetrievedEvidence:
-    similar_failures: list[tuple[FailureRecord, float]]   # (record, similarity_score)
-    kb_matches: list[tuple[KnowledgeEntry, float]]         # (entry, similarity_score), shown in the UI
+    similar_failures: list[tuple[FailureRecord, float]]   # (record, raw similarity)
+    kb_matches: list[tuple[KnowledgeEntry, float]]         # (entry, raw similarity), shown in the UI
     top_kb_entry: Optional[KnowledgeEntry]                 # only set when strong enough for the prompt
-    top_similarity: float                                   # 0.0–1.0
+    top_similarity: float                                   # best raw similarity among kept failures
 
 
 def retrieve(parsed_log: ParsedLog, top_k: int = 5, kb_top_k: int = 3) -> RetrievedEvidence:
@@ -53,27 +56,18 @@ def retrieve(parsed_log: ParsedLog, top_k: int = 5, kb_top_k: int = 3) -> Retrie
     Given a parsed log, retrieve:
     1. Top-k similar historical failures from FAISS
     2. Top-k matching KB entries via semantic search
+    Both lists are thresholded on the raw score, then ordered with feedback bonuses.
     """
     search_text = parsed_log.to_search_text()
+    adjustments = get_adjustments()
 
-    store = get_store()
-    similar_failures = [
-        (rec, score)
-        for rec, score in store.search(search_text, top_k=top_k)
-        if score >= SIMILAR_MIN_SCORE
-    ]
+    similar_failures = rerank(
+        get_store().search(search_text, top_k=top_k * 3), adjustments.failures, SIMILAR_MIN_SCORE, top_k)
+    kb_matches = rerank(
+        get_kb().search(search_text, top_k=kb_top_k * 3), adjustments.kb, KB_MIN_SCORE, kb_top_k)
 
-    kb = get_kb()
-    kb_matches = [
-        (entry, score)
-        for entry, score in kb.search(search_text, top_k=kb_top_k)
-        if score >= KB_MIN_SCORE
-    ]
-
-    top_kb_entry = None
-    if kb_matches and kb_matches[0][1] >= KB_PROMPT_MIN_SCORE:
-        top_kb_entry = kb_matches[0][0]
-    top_similarity = similar_failures[0][1] if similar_failures else 0.0
+    top_kb_entry = kb_matches[0][0] if kb_matches and kb_matches[0][1] >= KB_PROMPT_MIN_SCORE else None
+    top_similarity = max((score for _, score in similar_failures), default=0.0)
 
     return RetrievedEvidence(
         similar_failures=similar_failures,

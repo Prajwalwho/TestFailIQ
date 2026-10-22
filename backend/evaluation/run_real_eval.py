@@ -156,8 +156,12 @@ def hybrid_system(E, tokens, docs, k=60):
 
 
 def majority_system(docs):
+    """Chance baseline: always predict the most common labeled class ('other' is never a query label)."""
+    order = [label for label, _ in Counter(d["label"] for d in docs if d["label"] != "other").most_common()]
+
     def fn(q, allowed):
-        return [label for label, _ in Counter(docs[j]["label"] for j in allowed).most_common()]
+        return order
+
     return fn
 
 
