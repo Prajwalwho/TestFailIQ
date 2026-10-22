@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22T04:16:11.881477+00:00",
+  "generated_at": "2026-10-22T04:51:53.899016+00:00",
   "index_source": "eval",
   "index_size": 30,
   "test_sets": {
@@ -15,12 +15,12 @@
           "mrr": 1.0,
           "separation_auc": 0.95,
           "misses": [],
-          "current_threshold": 0.55,
+          "current_threshold": 0.675,
           "at_current_threshold": {
-            "threshold": 0.55,
-            "recall": 0.85,
+            "threshold": 0.675,
+            "recall": 0.65,
             "wrong": 0.0,
-            "negative_false_match": 0.167
+            "negative_false_match": 0.0
           },
           "suggested_threshold": 0.55,
           "sweep": [
@@ -129,12 +129,12 @@
               "gold_rank": 2
             }
           ],
-          "current_threshold": 0.55,
+          "current_threshold": 0.675,
           "at_current_threshold": {
-            "threshold": 0.55,
-            "recall": 0.75,
+            "threshold": 0.675,
+            "recall": 0.6,
             "wrong": 0.0,
-            "negative_false_match": 0.167
+            "negative_false_match": 0.0
           },
           "suggested_threshold": 0.5,
           "sweep": [
@@ -411,11 +411,11 @@
               "gold_rank": 2
             }
           ],
-          "current_threshold": 0.55,
+          "current_threshold": 0.675,
           "at_current_threshold": {
-            "threshold": 0.55,
-            "recall": 0.75,
-            "wrong": 0.05,
+            "threshold": 0.675,
+            "recall": 0.65,
+            "wrong": 0.0,
             "negative_false_match": 0.0
           },
           "suggested_threshold": 0.6,
@@ -518,11 +518,11 @@
               "gold_rank": 5
             }
           ],
-          "current_threshold": 0.55,
+          "current_threshold": 0.675,
           "at_current_threshold": {
-            "threshold": 0.55,
-            "recall": 0.75,
-            "wrong": 0.05,
+            "threshold": 0.675,
+            "recall": 0.65,
+            "wrong": 0.0,
             "negative_false_match": 0.0
           },
           "suggested_threshold": 0.5,
@@ -885,12 +885,12 @@
               "gold_rank": 2
             }
           ],
-          "current_threshold": 0.55,
+          "current_threshold": 0.675,
           "at_current_threshold": {
-            "threshold": 0.55,
-            "recall": 0.8,
-            "wrong": 0.025,
-            "negative_false_match": 0.071
+            "threshold": 0.675,
+            "recall": 0.65,
+            "wrong": 0.0,
+            "negative_false_match": 0.0
           },
           "suggested_threshold": 0.55,
           "sweep": [
@@ -1020,12 +1020,12 @@
               "gold_rank": 5
             }
           ],
-          "current_threshold": 0.55,
+          "current_threshold": 0.675,
           "at_current_threshold": {
-            "threshold": 0.55,
-            "recall": 0.75,
-            "wrong": 0.025,
-            "negative_false_match": 0.071
+            "threshold": 0.675,
+            "recall": 0.625,
+            "wrong": 0.0,
+            "negative_false_match": 0.0
           },
           "suggested_threshold": 0.5,
           "sweep": [

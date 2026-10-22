@@ -1,4 +1,4 @@
-from ingestion.log_parser import VARIANTS, normalize, parse_log
+from ingestion.log_parser import DEFAULT_VARIANT, VARIANTS, normalize, parse_log
 
 PYTEST_ASSERT = """\
 =================================== FAILURES ===================================
@@ -240,7 +240,8 @@ def test_overrides_win():
 def test_search_text_variants():
     p = parse_log(JAVA_NPE)
     assert set(VARIANTS) == {"full", "no_names", "no_names_norm", "error_only", "raw_head"}
-    assert p.to_search_text() == p.to_search_text("error_only")
+    assert DEFAULT_VARIANT in VARIANTS
+    assert p.to_search_text() == p.to_search_text(DEFAULT_VARIANT)
     assert p.to_search_text("not-a-variant") == p.to_search_text("full")
     assert "Test:" in p.to_search_text("full") and "Module:" in p.to_search_text("full")
     no_names = p.to_search_text("no_names")
@@ -249,7 +250,6 @@ def test_search_text_variants():
         "Error: NullPointerException: Cannot invoke method getEmail() on null object")
     assert "48" not in p.to_search_text("no_names_norm")
     assert p.to_search_text("raw_head") == p.raw_log[:1000]
-
 
 def test_normalize():
     out = normalize("line 42 at /home/a/b.py 0x7f12 id 123e4567-e89b-12d3-a456-426614174000")

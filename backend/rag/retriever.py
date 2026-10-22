@@ -1,8 +1,13 @@
 """
 RAG Retriever — combines FAISS failure search + KB search.
 Returns the best evidence package for LLM generation.
+
+Relevance thresholds come from data/thresholds.json (written by evaluation/tune_thresholds.py).
+Defaults apply when the file is missing.
 """
 
+import json
+import os
 from dataclasses import dataclass
 from typing import Optional
 
@@ -10,18 +15,36 @@ from ingestion.log_parser import ParsedLog
 from storage.faiss_store import FailureRecord, get_store
 from storage.knowledge_base import KnowledgeEntry, get_kb
 
+THRESHOLDS_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "thresholds.json")
+_DEFAULTS = {"similar_min": 0.60, "kb_display_min": 0.50, "kb_prompt_min": 0.50}
 
-# Tuned on the held-out eval set (evaluation/run_eval.py threshold sweep).
-# Re-tune on real logs (Day 10).
-SIMILAR_MIN_SCORE = 0.55   # drop historical failures less similar than this
-KB_MIN_SCORE = 0.40        # drop KB entries less similar than this
+
+def load_thresholds() -> dict:
+    values = dict(_DEFAULTS)
+    try:
+        with open(THRESHOLDS_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+        for key in values:
+            if key in data:
+                values[key] = float(data[key])
+    except (OSError, ValueError, TypeError):
+        pass
+    return values
+
+
+_T = load_thresholds()
+SIMILAR_MIN_SCORE = _T["similar_min"]                           # past failures shown and given to the LLM
+KB_MIN_SCORE = _T["kb_display_min"]                             # KB cards shown in the UI
+KB_PROMPT_MIN_SCORE = max(_T["kb_prompt_min"], KB_MIN_SCORE)    # KB entry given to the LLM as evidence
+print(f"[Retriever] thresholds: similar>={SIMILAR_MIN_SCORE} kb_display>={KB_MIN_SCORE} "
+      f"kb_prompt>={KB_PROMPT_MIN_SCORE}")
 
 
 @dataclass
 class RetrievedEvidence:
     similar_failures: list[tuple[FailureRecord, float]]   # (record, similarity_score)
-    kb_matches: list[tuple[KnowledgeEntry, float]]         # (entry, similarity_score)
-    top_kb_entry: Optional[KnowledgeEntry]
+    kb_matches: list[tuple[KnowledgeEntry, float]]         # (entry, similarity_score), shown in the UI
+    top_kb_entry: Optional[KnowledgeEntry]                 # only set when strong enough for the prompt
     top_similarity: float                                   # 0.0–1.0
 
 
@@ -33,7 +56,6 @@ def retrieve(parsed_log: ParsedLog, top_k: int = 5, kb_top_k: int = 3) -> Retrie
     """
     search_text = parsed_log.to_search_text()
 
-    # --- FAISS search ---
     store = get_store()
     similar_failures = [
         (rec, score)
@@ -41,7 +63,6 @@ def retrieve(parsed_log: ParsedLog, top_k: int = 5, kb_top_k: int = 3) -> Retrie
         if score >= SIMILAR_MIN_SCORE
     ]
 
-    # --- KB semantic search ---
     kb = get_kb()
     kb_matches = [
         (entry, score)
@@ -49,7 +70,9 @@ def retrieve(parsed_log: ParsedLog, top_k: int = 5, kb_top_k: int = 3) -> Retrie
         if score >= KB_MIN_SCORE
     ]
 
-    top_kb_entry = kb_matches[0][0] if kb_matches else None
+    top_kb_entry = None
+    if kb_matches and kb_matches[0][1] >= KB_PROMPT_MIN_SCORE:
+        top_kb_entry = kb_matches[0][0]
     top_similarity = similar_failures[0][1] if similar_failures else 0.0
 
     return RetrievedEvidence(
