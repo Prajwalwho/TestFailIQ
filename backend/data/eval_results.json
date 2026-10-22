@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T06:28:56.273273+00:00",
+  "generated_at": "2026-10-22T04:16:11.881477+00:00",
   "index_source": "eval",
   "index_size": 30,
   "test_sets": {
@@ -15,10 +15,10 @@
           "mrr": 1.0,
           "separation_auc": 0.95,
           "misses": [],
-          "current_threshold": 0.6,
+          "current_threshold": 0.55,
           "at_current_threshold": {
-            "threshold": 0.6,
-            "recall": 0.8,
+            "threshold": 0.55,
+            "recall": 0.85,
             "wrong": 0.0,
             "negative_false_match": 0.167
           },
@@ -129,9 +129,9 @@
               "gold_rank": 2
             }
           ],
-          "current_threshold": 0.6,
+          "current_threshold": 0.55,
           "at_current_threshold": {
-            "threshold": 0.6,
+            "threshold": 0.55,
             "recall": 0.75,
             "wrong": 0.0,
             "negative_false_match": 0.167
@@ -198,10 +198,10 @@
           "scale": "cosine",
           "n_positive": 20,
           "n_negative": 6,
-          "hit_at_1": 0.95,
+          "hit_at_1": 0.9,
           "hit_at_3": 1.0,
-          "mrr": 0.975,
-          "separation_auc": 0.958,
+          "mrr": 0.95,
+          "separation_auc": 0.833,
           "misses": [
             {
               "id": "EVAL-004",
@@ -209,46 +209,53 @@
               "predicted": "KB-005",
               "top1_score": 0.345,
               "gold_rank": 2
+            },
+            {
+              "id": "EVAL-039",
+              "gold": "KB-008",
+              "predicted": "KB-024",
+              "top1_score": 0.273,
+              "gold_rank": 2
             }
           ],
-          "current_threshold": 0.5,
+          "current_threshold": 0.35,
           "at_current_threshold": {
-            "threshold": 0.5,
-            "recall": 0.7,
+            "threshold": 0.35,
+            "recall": 0.9,
             "wrong": 0.0,
-            "negative_false_match": 0.0
+            "negative_false_match": 0.5
           },
-          "suggested_threshold": 0.35,
+          "suggested_threshold": 0.5,
           "sweep": [
             {
               "threshold": 0.3,
               "recall": 0.9,
               "wrong": 0.05,
-              "negative_false_match": 0.5
+              "negative_false_match": 0.667
             },
             {
               "threshold": 0.35,
               "recall": 0.9,
               "wrong": 0.0,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.5
             },
             {
               "threshold": 0.4,
               "recall": 0.85,
               "wrong": 0.0,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.333
             },
             {
               "threshold": 0.45,
               "recall": 0.75,
               "wrong": 0.0,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.333
             },
             {
               "threshold": 0.5,
               "recall": 0.7,
               "wrong": 0.0,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.167
             },
             {
               "threshold": 0.55,
@@ -281,22 +288,22 @@
           "n_positive": 20,
           "n_negative": 6,
           "hit_at_1": 0.9,
-          "hit_at_3": 1.0,
-          "mrr": 0.942,
-          "separation_auc": 0.967,
+          "hit_at_3": 0.95,
+          "mrr": 0.935,
+          "separation_auc": 0.767,
           "misses": [
             {
               "id": "EVAL-004",
               "gold": "KB-001",
-              "predicted": "KB-010",
-              "top1_score": 4.316,
-              "gold_rank": 3
+              "predicted": "KB-012",
+              "top1_score": 4.881,
+              "gold_rank": 5
             },
             {
-              "id": "EVAL-010",
-              "gold": "KB-002",
-              "predicted": "KB-010",
-              "top1_score": 4.316,
+              "id": "EVAL-019",
+              "gold": "KB-004",
+              "predicted": "KB-020",
+              "top1_score": 10.199,
               "gold_rank": 2
             }
           ]
@@ -308,14 +315,14 @@
           "hit_at_1": 1.0,
           "hit_at_3": 1.0,
           "mrr": 1.0,
-          "separation_auc": 0.975,
+          "separation_auc": 0.9,
           "misses": [],
-          "current_threshold": 0.5,
+          "current_threshold": 0.35,
           "at_current_threshold": {
-            "threshold": 0.5,
-            "recall": 0.7,
+            "threshold": 0.35,
+            "recall": 0.9,
             "wrong": 0.0,
-            "negative_false_match": 0.0
+            "negative_false_match": 0.167
           },
           "suggested_threshold": 0.35,
           "sweep": [
@@ -329,25 +336,25 @@
               "threshold": 0.35,
               "recall": 0.9,
               "wrong": 0.0,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.167
             },
             {
               "threshold": 0.4,
               "recall": 0.85,
               "wrong": 0.0,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.167
             },
             {
               "threshold": 0.45,
               "recall": 0.75,
               "wrong": 0.0,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.167
             },
             {
               "threshold": 0.5,
               "recall": 0.7,
               "wrong": 0.0,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.167
             },
             {
               "threshold": 0.55,
@@ -404,11 +411,11 @@
               "gold_rank": 2
             }
           ],
-          "current_threshold": 0.6,
+          "current_threshold": 0.55,
           "at_current_threshold": {
-            "threshold": 0.6,
+            "threshold": 0.55,
             "recall": 0.75,
-            "wrong": 0.0,
+            "wrong": 0.05,
             "negative_false_match": 0.0
           },
           "suggested_threshold": 0.6,
@@ -511,11 +518,11 @@
               "gold_rank": 5
             }
           ],
-          "current_threshold": 0.6,
+          "current_threshold": 0.55,
           "at_current_threshold": {
-            "threshold": 0.6,
+            "threshold": 0.55,
             "recall": 0.75,
-            "wrong": 0.0,
+            "wrong": 0.05,
             "negative_false_match": 0.0
           },
           "suggested_threshold": 0.5,
@@ -580,57 +587,78 @@
           "scale": "cosine",
           "n_positive": 20,
           "n_negative": 8,
-          "hit_at_1": 0.95,
+          "hit_at_1": 0.8,
           "hit_at_3": 1.0,
-          "mrr": 0.975,
-          "separation_auc": 0.919,
+          "mrr": 0.883,
+          "separation_auc": 0.887,
           "misses": [
             {
               "id": "HARD-007",
               "gold": "KB-004",
               "predicted": "KB-002",
               "top1_score": 0.602,
+              "gold_rank": 3
+            },
+            {
+              "id": "HARD-009",
+              "gold": "KB-005",
+              "predicted": "KB-022",
+              "top1_score": 0.363,
+              "gold_rank": 2
+            },
+            {
+              "id": "HARD-015",
+              "gold": "KB-008",
+              "predicted": "KB-026",
+              "top1_score": 0.337,
+              "gold_rank": 3
+            },
+            {
+              "id": "HARD-018",
+              "gold": "KB-009",
+              "predicted": "KB-014",
+              "top1_score": 0.364,
               "gold_rank": 2
             }
           ],
-          "current_threshold": 0.5,
+          "current_threshold": 0.35,
           "at_current_threshold": {
-            "threshold": 0.5,
-            "recall": 0.5,
-            "wrong": 0.05,
-            "negative_false_match": 0.0
+            "threshold": 0.35,
+            "recall": 0.8,
+            "wrong": 0.15,
+            "negative_false_match": 0.375
           },
           "suggested_threshold": 0.45,
           "sweep": [
             {
               "threshold": 0.3,
-              "recall": 0.9,
-              "wrong": 0.05,
-              "negative_false_match": 0.5
+              "recall": 0.8,
+              "wrong": 0.2,
+              "negative_false_match": 0.625
             },
             {
               "threshold": 0.35,
               "recall": 0.8,
-              "wrong": 0.05,
-              "negative_false_match": 0.125
+              "wrong": 0.15,
+              "negative_false_match": 0.375
             },
             {
               "threshold": 0.4,
               "recall": 0.75,
               "wrong": 0.05,
-              "negative_false_match": 0.125
+              "negative_false_match": 0.25
             },
             {
               "threshold": 0.45,
               "recall": 0.7,
               "wrong": 0.05,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.125
             },
             {
               "threshold": 0.5,
               "recall": 0.5,
               "wrong": 0.05,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.125
             },
             {
               "threshold": 0.55,
@@ -662,38 +690,59 @@
           "scale": "bm25",
           "n_positive": 20,
           "n_negative": 8,
-          "hit_at_1": 0.8,
-          "hit_at_3": 0.95,
-          "mrr": 0.867,
-          "separation_auc": 0.856,
+          "hit_at_1": 0.65,
+          "hit_at_3": 0.85,
+          "mrr": 0.733,
+          "separation_auc": 0.769,
           "misses": [
+            {
+              "id": "HARD-005",
+              "gold": "KB-003",
+              "predicted": "KB-017",
+              "top1_score": 10.802,
+              "gold_rank": 2
+            },
+            {
+              "id": "HARD-006",
+              "gold": "KB-003",
+              "predicted": "KB-017",
+              "top1_score": 8.68,
+              "gold_rank": 2
+            },
             {
               "id": "HARD-007",
               "gold": "KB-004",
-              "predicted": "KB-002",
-              "top1_score": 4.777,
-              "gold_rank": 2
+              "predicted": "KB-020",
+              "top1_score": 10.991,
+              "gold_rank": 3
             },
             {
               "id": "HARD-008",
               "gold": "KB-004",
-              "predicted": "KB-002",
-              "top1_score": 2.958,
-              "gold_rank": 2
+              "predicted": "KB-020",
+              "top1_score": 10.199,
+              "gold_rank": 3
             },
             {
               "id": "HARD-009",
               "gold": "KB-005",
-              "predicted": "KB-010",
-              "top1_score": 4.316,
+              "predicted": "KB-021",
+              "top1_score": 5.662,
+              "gold_rank": null
+            },
+            {
+              "id": "HARD-015",
+              "gold": "KB-008",
+              "predicted": "KB-026",
+              "top1_score": 6.633,
               "gold_rank": null
             },
             {
               "id": "HARD-018",
               "gold": "KB-009",
-              "predicted": "KB-007",
-              "top1_score": 3.859,
-              "gold_rank": 3
+              "predicted": "KB-026",
+              "top1_score": 6.494,
+              "gold_rank": null
             }
           ]
         },
@@ -701,71 +750,85 @@
           "scale": "cosine",
           "n_positive": 20,
           "n_negative": 8,
-          "hit_at_1": 0.85,
-          "hit_at_3": 1.0,
-          "mrr": 0.925,
-          "separation_auc": 0.912,
+          "hit_at_1": 0.75,
+          "hit_at_3": 0.9,
+          "mrr": 0.842,
+          "separation_auc": 0.869,
           "misses": [
             {
               "id": "HARD-007",
               "gold": "KB-004",
               "predicted": "KB-002",
               "top1_score": 0.602,
+              "gold_rank": 3
+            },
+            {
+              "id": "HARD-008",
+              "gold": "KB-004",
+              "predicted": "KB-020",
+              "top1_score": 0.428,
               "gold_rank": 2
             },
             {
               "id": "HARD-009",
               "gold": "KB-005",
-              "predicted": "KB-006",
-              "top1_score": 0.288,
+              "predicted": "KB-021",
+              "top1_score": 0.284,
+              "gold_rank": 4
+            },
+            {
+              "id": "HARD-015",
+              "gold": "KB-008",
+              "predicted": "KB-026",
+              "top1_score": 0.337,
               "gold_rank": 2
             },
             {
               "id": "HARD-018",
               "gold": "KB-009",
-              "predicted": "KB-007",
-              "top1_score": 0.205,
-              "gold_rank": 2
+              "predicted": "KB-014",
+              "top1_score": 0.364,
+              "gold_rank": 4
             }
           ],
-          "current_threshold": 0.5,
+          "current_threshold": 0.35,
           "at_current_threshold": {
-            "threshold": 0.5,
-            "recall": 0.5,
-            "wrong": 0.05,
-            "negative_false_match": 0.0
+            "threshold": 0.35,
+            "recall": 0.75,
+            "wrong": 0.15,
+            "negative_false_match": 0.25
           },
           "suggested_threshold": 0.45,
           "sweep": [
             {
               "threshold": 0.3,
-              "recall": 0.85,
-              "wrong": 0.05,
-              "negative_false_match": 0.375
+              "recall": 0.75,
+              "wrong": 0.2,
+              "negative_false_match": 0.625
             },
             {
               "threshold": 0.35,
-              "recall": 0.8,
-              "wrong": 0.05,
-              "negative_false_match": 0.125
+              "recall": 0.75,
+              "wrong": 0.15,
+              "negative_false_match": 0.25
             },
             {
               "threshold": 0.4,
-              "recall": 0.75,
-              "wrong": 0.05,
-              "negative_false_match": 0.125
+              "recall": 0.7,
+              "wrong": 0.1,
+              "negative_false_match": 0.25
             },
             {
               "threshold": 0.45,
-              "recall": 0.7,
+              "recall": 0.65,
               "wrong": 0.05,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.125
             },
             {
               "threshold": 0.5,
               "recall": 0.5,
               "wrong": 0.05,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.125
             },
             {
               "threshold": 0.55,
@@ -822,11 +885,11 @@
               "gold_rank": 2
             }
           ],
-          "current_threshold": 0.6,
+          "current_threshold": 0.55,
           "at_current_threshold": {
-            "threshold": 0.6,
-            "recall": 0.775,
-            "wrong": 0.0,
+            "threshold": 0.55,
+            "recall": 0.8,
+            "wrong": 0.025,
             "negative_false_match": 0.071
           },
           "suggested_threshold": 0.55,
@@ -957,11 +1020,11 @@
               "gold_rank": 5
             }
           ],
-          "current_threshold": 0.6,
+          "current_threshold": 0.55,
           "at_current_threshold": {
-            "threshold": 0.6,
+            "threshold": 0.55,
             "recall": 0.75,
-            "wrong": 0.0,
+            "wrong": 0.025,
             "negative_false_match": 0.071
           },
           "suggested_threshold": 0.5,
@@ -1026,10 +1089,10 @@
           "scale": "cosine",
           "n_positive": 40,
           "n_negative": 14,
-          "hit_at_1": 0.95,
+          "hit_at_1": 0.85,
           "hit_at_3": 1.0,
-          "mrr": 0.975,
-          "separation_auc": 0.934,
+          "mrr": 0.917,
+          "separation_auc": 0.855,
           "misses": [
             {
               "id": "EVAL-004",
@@ -1039,51 +1102,79 @@
               "gold_rank": 2
             },
             {
+              "id": "EVAL-039",
+              "gold": "KB-008",
+              "predicted": "KB-024",
+              "top1_score": 0.273,
+              "gold_rank": 2
+            },
+            {
               "id": "HARD-007",
               "gold": "KB-004",
               "predicted": "KB-002",
               "top1_score": 0.602,
+              "gold_rank": 3
+            },
+            {
+              "id": "HARD-009",
+              "gold": "KB-005",
+              "predicted": "KB-022",
+              "top1_score": 0.363,
+              "gold_rank": 2
+            },
+            {
+              "id": "HARD-015",
+              "gold": "KB-008",
+              "predicted": "KB-026",
+              "top1_score": 0.337,
+              "gold_rank": 3
+            },
+            {
+              "id": "HARD-018",
+              "gold": "KB-009",
+              "predicted": "KB-014",
+              "top1_score": 0.364,
               "gold_rank": 2
             }
           ],
-          "current_threshold": 0.5,
+          "current_threshold": 0.35,
           "at_current_threshold": {
-            "threshold": 0.5,
-            "recall": 0.6,
-            "wrong": 0.025,
-            "negative_false_match": 0.0
+            "threshold": 0.35,
+            "recall": 0.85,
+            "wrong": 0.075,
+            "negative_false_match": 0.429
           },
-          "suggested_threshold": 0.35,
+          "suggested_threshold": 0.4,
           "sweep": [
             {
               "threshold": 0.3,
-              "recall": 0.9,
-              "wrong": 0.05,
-              "negative_false_match": 0.5
+              "recall": 0.85,
+              "wrong": 0.125,
+              "negative_false_match": 0.643
             },
             {
               "threshold": 0.35,
               "recall": 0.85,
-              "wrong": 0.025,
-              "negative_false_match": 0.071
+              "wrong": 0.075,
+              "negative_false_match": 0.429
             },
             {
               "threshold": 0.4,
               "recall": 0.8,
               "wrong": 0.025,
-              "negative_false_match": 0.071
+              "negative_false_match": 0.286
             },
             {
               "threshold": 0.45,
               "recall": 0.725,
               "wrong": 0.025,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.214
             },
             {
               "threshold": 0.5,
               "recall": 0.6,
               "wrong": 0.025,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.143
             },
             {
               "threshold": 0.55,
@@ -1115,52 +1206,73 @@
           "scale": "bm25",
           "n_positive": 40,
           "n_negative": 14,
-          "hit_at_1": 0.85,
-          "hit_at_3": 0.975,
-          "mrr": 0.904,
-          "separation_auc": 0.917,
+          "hit_at_1": 0.775,
+          "hit_at_3": 0.9,
+          "mrr": 0.834,
+          "separation_auc": 0.771,
           "misses": [
             {
               "id": "EVAL-004",
               "gold": "KB-001",
-              "predicted": "KB-010",
-              "top1_score": 4.316,
-              "gold_rank": 3
+              "predicted": "KB-012",
+              "top1_score": 4.881,
+              "gold_rank": 5
             },
             {
-              "id": "EVAL-010",
-              "gold": "KB-002",
-              "predicted": "KB-010",
-              "top1_score": 4.316,
+              "id": "EVAL-019",
+              "gold": "KB-004",
+              "predicted": "KB-020",
+              "top1_score": 10.199,
+              "gold_rank": 2
+            },
+            {
+              "id": "HARD-005",
+              "gold": "KB-003",
+              "predicted": "KB-017",
+              "top1_score": 10.802,
+              "gold_rank": 2
+            },
+            {
+              "id": "HARD-006",
+              "gold": "KB-003",
+              "predicted": "KB-017",
+              "top1_score": 8.68,
               "gold_rank": 2
             },
             {
               "id": "HARD-007",
               "gold": "KB-004",
-              "predicted": "KB-002",
-              "top1_score": 4.777,
-              "gold_rank": 2
+              "predicted": "KB-020",
+              "top1_score": 10.991,
+              "gold_rank": 3
             },
             {
               "id": "HARD-008",
               "gold": "KB-004",
-              "predicted": "KB-002",
-              "top1_score": 2.958,
-              "gold_rank": 2
+              "predicted": "KB-020",
+              "top1_score": 10.199,
+              "gold_rank": 3
             },
             {
               "id": "HARD-009",
               "gold": "KB-005",
-              "predicted": "KB-010",
-              "top1_score": 4.316,
+              "predicted": "KB-021",
+              "top1_score": 5.662,
+              "gold_rank": null
+            },
+            {
+              "id": "HARD-015",
+              "gold": "KB-008",
+              "predicted": "KB-026",
+              "top1_score": 6.633,
               "gold_rank": null
             },
             {
               "id": "HARD-018",
               "gold": "KB-009",
-              "predicted": "KB-007",
-              "top1_score": 3.859,
-              "gold_rank": 3
+              "predicted": "KB-026",
+              "top1_score": 6.494,
+              "gold_rank": null
             }
           ]
         },
@@ -1168,71 +1280,85 @@
           "scale": "cosine",
           "n_positive": 40,
           "n_negative": 14,
-          "hit_at_1": 0.925,
-          "hit_at_3": 1.0,
-          "mrr": 0.963,
-          "separation_auc": 0.934,
+          "hit_at_1": 0.875,
+          "hit_at_3": 0.95,
+          "mrr": 0.921,
+          "separation_auc": 0.882,
           "misses": [
             {
               "id": "HARD-007",
               "gold": "KB-004",
               "predicted": "KB-002",
               "top1_score": 0.602,
+              "gold_rank": 3
+            },
+            {
+              "id": "HARD-008",
+              "gold": "KB-004",
+              "predicted": "KB-020",
+              "top1_score": 0.428,
               "gold_rank": 2
             },
             {
               "id": "HARD-009",
               "gold": "KB-005",
-              "predicted": "KB-006",
-              "top1_score": 0.288,
+              "predicted": "KB-021",
+              "top1_score": 0.284,
+              "gold_rank": 4
+            },
+            {
+              "id": "HARD-015",
+              "gold": "KB-008",
+              "predicted": "KB-026",
+              "top1_score": 0.337,
               "gold_rank": 2
             },
             {
               "id": "HARD-018",
               "gold": "KB-009",
-              "predicted": "KB-007",
-              "top1_score": 0.205,
-              "gold_rank": 2
+              "predicted": "KB-014",
+              "top1_score": 0.364,
+              "gold_rank": 4
             }
           ],
-          "current_threshold": 0.5,
+          "current_threshold": 0.35,
           "at_current_threshold": {
-            "threshold": 0.5,
-            "recall": 0.6,
-            "wrong": 0.025,
-            "negative_false_match": 0.0
+            "threshold": 0.35,
+            "recall": 0.825,
+            "wrong": 0.075,
+            "negative_false_match": 0.214
           },
           "suggested_threshold": 0.35,
           "sweep": [
             {
               "threshold": 0.3,
-              "recall": 0.9,
-              "wrong": 0.025,
-              "negative_false_match": 0.357
+              "recall": 0.85,
+              "wrong": 0.1,
+              "negative_false_match": 0.5
             },
             {
               "threshold": 0.35,
-              "recall": 0.85,
-              "wrong": 0.025,
-              "negative_false_match": 0.071
+              "recall": 0.825,
+              "wrong": 0.075,
+              "negative_false_match": 0.214
             },
             {
               "threshold": 0.4,
-              "recall": 0.8,
-              "wrong": 0.025,
-              "negative_false_match": 0.071
+              "recall": 0.775,
+              "wrong": 0.05,
+              "negative_false_match": 0.214
             },
             {
               "threshold": 0.45,
-              "recall": 0.725,
+              "recall": 0.7,
               "wrong": 0.025,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.143
             },
             {
               "threshold": 0.5,
               "recall": 0.6,
               "wrong": 0.025,
-              "negative_false_match": 0.0
+              "negative_false_match": 0.143
             },
             {
               "threshold": 0.55,

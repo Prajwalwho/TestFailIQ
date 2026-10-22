@@ -8,7 +8,8 @@
     "root_cause": "UserRepository.findById returns Optional<User> but callers call .get() without checking isPresent().",
     "resolution": "Wrap with Optional.ifPresent() or use .orElseThrow(). Add null guard in UserService.findById before returning.",
     "fix_snippet": "return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));",
-    "tags": ["null-pointer", "java", "user-service", "optional"]
+    "tags": ["null-pointer", "java", "user-service", "optional"],
+    "category": "runtime_exception"
   },
   {
     "id": "KB-002",
@@ -19,7 +20,8 @@
     "root_cause": "Tests open DB connections but don't release them. Connection pool (max=5) gets exhausted after a few parallel test runs.",
     "resolution": "Annotate test class with @Transactional to auto-rollback, or close connections explicitly in @AfterEach. Increase pool size in test config.",
     "fix_snippet": "@AfterEach void cleanup() { entityManager.close(); }",
-    "tags": ["database", "connection-pool", "integration-test", "timeout"]
+    "tags": ["database", "connection-pool", "integration-test", "timeout"],
+    "category": "environment_or_infra"
   },
   {
     "id": "KB-003",
@@ -30,7 +32,8 @@
     "root_cause": "Double arithmetic introduces floating-point errors. assertEquals(expected, actual) fails for values like 10.005 vs 10.004999999.",
     "resolution": "Use BigDecimal for monetary values. Replace assertEquals with assertThat(...).isCloseTo(expected, within(0.01)).",
     "fix_snippet": "assertThat(actual).isCloseTo(expected, within(new BigDecimal(\"0.01\")));",
-    "tags": ["assertion", "floating-point", "bigdecimal", "payment"]
+    "tags": ["assertion", "floating-point", "bigdecimal", "payment"],
+    "category": "assertion_failure"
   },
   {
     "id": "KB-004",
@@ -41,7 +44,8 @@
     "root_cause": "RSA-4096 key generation in @BeforeEach runs on every test case. Key generation takes ~800ms per test.",
     "resolution": "Move key generation to @BeforeAll (static). Cache the KeyPair across tests. Use RSA-2048 for test environments.",
     "fix_snippet": "@BeforeAll static void setupKeys() { testKeyPair = KeyPairGenerator.getInstance(\"RSA\").generateKeyPair(); }",
-    "tags": ["timeout", "jwt", "rsa", "auth", "performance"]
+    "tags": ["timeout", "jwt", "rsa", "auth", "performance"],
+    "category": "environment_or_infra"
   },
   {
     "id": "KB-005",
@@ -52,7 +56,8 @@
     "root_cause": "Code accesses orders.get(0) without checking if the list is empty. Empty orders passed from upstream mock.",
     "resolution": "Add isEmpty() guard before accessing list elements. Update mock to reflect realistic non-empty input or handle empty case explicitly.",
     "fix_snippet": "if (orders.isEmpty()) return Collections.emptyList();",
-    "tags": ["index-out-of-bounds", "list", "empty-check", "order-processor"]
+    "tags": ["index-out-of-bounds", "list", "empty-check", "order-processor"],
+    "category": "runtime_exception"
   },
   {
     "id": "KB-006",
@@ -63,7 +68,8 @@
     "root_cause": "Test thread modifies HashMap while another thread iterates it during eviction. HashMap is not thread-safe.",
     "resolution": "Replace HashMap with ConcurrentHashMap. Use iterator.remove() for safe removal during iteration.",
     "fix_snippet": "private final Map<String, Object> cache = new ConcurrentHashMap<>();",
-    "tags": ["concurrent", "thread-safety", "cache", "hashmap"]
+    "tags": ["concurrent", "thread-safety", "cache", "hashmap"],
+    "category": "environment_or_infra"
   },
   {
     "id": "KB-007",
@@ -74,7 +80,8 @@
     "root_cause": "Recursive parse() method has no depth limit. Deeply nested test fixtures (depth > 500) exhaust the JVM stack.",
     "resolution": "Add a maxDepth parameter. Throw ParseException when depth exceeds threshold. Use iterative parsing with an explicit stack for deep structures.",
     "fix_snippet": "if (depth > MAX_DEPTH) throw new ParseException(\"Max nesting depth exceeded: \" + MAX_DEPTH);",
-    "tags": ["stack-overflow", "recursion", "parser", "json", "depth-limit"]
+    "tags": ["stack-overflow", "recursion", "parser", "json", "depth-limit"],
+    "category": "runtime_exception"
   },
   {
     "id": "KB-008",
@@ -85,7 +92,8 @@
     "root_cause": "ReportGenerator assumes /reports/ directory exists. In CI, the directory is not pre-created.",
     "resolution": "Add Files.createDirectories(outputPath.getParent()) before writing. Alternatively, create the directory in CI pipeline setup.",
     "fix_snippet": "Files.createDirectories(outputPath.getParent()); Files.write(outputPath, content.getBytes());",
-    "tags": ["file-not-found", "io", "ci", "directory", "report"]
+    "tags": ["file-not-found", "io", "ci", "directory", "report"],
+    "category": "environment_or_infra"
   },
   {
     "id": "KB-009",
@@ -96,7 +104,8 @@
     "root_cause": "PluginInterface was updated (new method added) but plugin JAR was not recompiled. ClassLoader loads the old class.",
     "resolution": "Add version check on plugin load. Enforce interface version compatibility. Recompile all plugins after interface changes.",
     "fix_snippet": "if (!plugin.getVersion().equals(REQUIRED_VERSION)) throw new PluginVersionMismatchException();",
-    "tags": ["class-cast", "plugin", "classloader", "version-mismatch"]
+    "tags": ["class-cast", "plugin", "classloader", "version-mismatch"],
+    "category": "dependency_or_import"
   },
   {
     "id": "KB-010",
@@ -107,6 +116,199 @@
     "root_cause": "NotificationService tries to connect to real SMTP (localhost:25) in tests. No mock is configured.",
     "resolution": "Mock the JavaMailSender or use GreenMail for integration tests. Profile-separate SMTP config so tests use a mock sender.",
     "fix_snippet": "@MockBean JavaMailSender mailSender; // in test class",
-    "tags": ["smtp", "connection-refused", "mock", "notification", "email"]
+    "tags": ["smtp", "connection-refused", "mock", "notification", "email"],
+    "category": "environment_or_infra"
+  },
+  {
+    "id": "KB-011",
+    "title": "ModuleNotFoundError in CI: dependency missing from the test environment",
+    "error_type": "ModuleNotFoundError",
+    "module": "Dependencies",
+    "description": "pytest fails at collection with ImportError while importing test module and ModuleNotFoundError: No module named. The package works locally but is not installed on the CI runner.",
+    "root_cause": "The dependency is missing from the requirements or lock file, is an optional extra that CI does not install, or the runner uses a different Python version than local development.",
+    "resolution": "Add the package to the test requirements or install the extra. Pin versions in a lock file and make CI install from it. Check the Python version matrix.",
+    "fix_snippet": "pip install -e \".[test]\" && python -m pytest",
+    "tags": ["python", "import-error", "dependency", "pytest", "collection"],
+    "category": "dependency_or_import"
+  },
+  {
+    "id": "KB-012",
+    "title": "NoClassDefFoundError: conflicting JUnit or library jar versions on the classpath",
+    "error_type": "NoClassDefFoundError",
+    "module": "Dependencies",
+    "description": "JUnitException: The wrapped NoClassDefFoundError is likely caused by the versions of JUnit jars on the classpath. The following conflicting versions were detected.",
+    "root_cause": "Two modules resolve different versions of the same library, for example an old junit-platform-commons next to newer engine and launcher artifacts, so classes from one version call classes missing in another.",
+    "resolution": "Align all modules of the library to one version using a BOM or dependencyManagement. Run the dependency tree task to find the stray version and exclude or upgrade it.",
+    "fix_snippet": "mvn dependency:tree -Dincludes=org.junit.platform",
+    "tags": ["junit", "classpath", "version-conflict", "maven", "gradle", "java"],
+    "category": "dependency_or_import"
+  },
+  {
+    "id": "KB-013",
+    "title": "ImportError: cannot import name from partially initialized module",
+    "error_type": "ImportError",
+    "module": "Dependencies",
+    "description": "ImportError: cannot import name from partially initialized module (most likely due to a circular import), or a test file shadows an installed package name.",
+    "root_cause": "Two modules import each other at import time, or a local file named like a library hides the real package.",
+    "resolution": "Move the import inside the function that needs it, extract shared code into a third module, or rename the shadowing file.",
+    "fix_snippet": "def build(): from pkg.helpers import make  # import lazily to break the cycle",
+    "tags": ["python", "import-error", "circular-import", "shadowing"],
+    "category": "dependency_or_import"
+  },
+  {
+    "id": "KB-014",
+    "title": "Compilation error on a newer or different JDK: cannot find symbol",
+    "error_type": "CompilationError",
+    "module": "Build",
+    "description": "compileJava FAILED with error: cannot find symbol, symbol: method X, location: variable of type Y. The build passes on one JDK or vendor and fails on another entry of a cross-version matrix.",
+    "root_cause": "The code or a build tool uses an API that exists only in some JDK versions or vendors, or a library whose API changed between versions.",
+    "resolution": "Compile against the lowest supported JDK, guard version-specific APIs behind a compatibility layer, or exclude the tool task from the failing matrix entry.",
+    "fix_snippet": "javac --release 17 -Xlint:all Tool.java",
+    "tags": ["java", "compile", "jdk", "cannot-find-symbol", "matrix"],
+    "category": "build_or_compile"
+  },
+  {
+    "id": "KB-015",
+    "title": "TypeScript compile error after a dependency upgrade (TS2345, TS2322)",
+    "error_type": "TS2345",
+    "module": "Build",
+    "description": "error TS2345: Argument of type X is not assignable to parameter of type Y, appearing in CI after a types package or compiler upgrade.",
+    "root_cause": "Type definitions changed in a minor release, or the lock file resolves a newer types version in CI than locally.",
+    "resolution": "Pin the types package version, update call sites to the new signature, and commit the lock file so CI and local resolve identical versions.",
+    "fix_snippet": "npm ci && npx tsc --noEmit",
+    "tags": ["typescript", "types", "upgrade", "compile", "ci"],
+    "category": "build_or_compile"
+  },
+  {
+    "id": "KB-016",
+    "title": "SyntaxError on an older runtime: language feature not supported",
+    "error_type": "SyntaxError",
+    "module": "Build",
+    "description": "SyntaxError: invalid syntax on one CI matrix entry that runs an older Python (match statements) or an older Node (optional chaining).",
+    "root_cause": "The source uses syntax that is newer than the oldest runtime in the CI matrix.",
+    "resolution": "Raise the minimum supported version in the project metadata, drop the old matrix entry, or rewrite the code with older syntax.",
+    "fix_snippet": "python_requires='>=3.10'",
+    "tags": ["syntax", "python-version", "node-version", "matrix", "compile"],
+    "category": "build_or_compile"
+  },
+  {
+    "id": "KB-017",
+    "title": "AssertionFailedError on macOS or Windows: path comparison differs by platform",
+    "error_type": "AssertionFailedError",
+    "module": "FileSystem",
+    "description": "expected: /var/folders/.../file but was: /private/var/folders/.../file on macOS, or backslash paths and drive letters on Windows break string comparisons of paths.",
+    "root_cause": "macOS temp directories are symlinks (/var points to /private/var) and Windows uses different separators, so string comparison fails although both paths name the same file.",
+    "resolution": "Compare canonical paths (toRealPath) or Path objects instead of strings, and avoid hard-coded separators in expected values.",
+    "fix_snippet": "assertEquals(expected.toRealPath(), actual.toRealPath());",
+    "tags": ["assertion", "path", "macos", "windows", "symlink", "platform"],
+    "category": "assertion_failure"
+  },
+  {
+    "id": "KB-018",
+    "title": "Snapshot or golden-file mismatch after an intentional output change",
+    "error_type": "AssertionError",
+    "module": "Snapshots",
+    "description": "Jest or pytest snapshot test fails: snapshot name mismatched, received value does not match stored snapshot.",
+    "root_cause": "Rendered output or serialised data changed on purpose or through a dependency upgrade, but the stored snapshot was not updated.",
+    "resolution": "Review the diff. If the change is intended update the snapshot and commit it; otherwise fix the regression that changed the output.",
+    "fix_snippet": "npx jest -u path/to/test",
+    "tags": ["snapshot", "jest", "golden-file", "assertion"],
+    "category": "assertion_failure"
+  },
+  {
+    "id": "KB-019",
+    "title": "Intermittent failure from a test teardown race: runner already closed",
+    "error_type": "Error",
+    "module": "TestEnvironment",
+    "description": "Error: Vite module runner has been closed, or transport was disconnected, cannot call fetchModule. Fails only sometimes, usually at the end of a test file.",
+    "root_cause": "An async operation still runs after the test environment is torn down. The test does not await it, or the server closes before pending requests finish.",
+    "resolution": "Await all pending promises before teardown, close servers in afterAll after in-flight work completes, and only then consider a retry.",
+    "fix_snippet": "afterAll(async () => { await server.close(); });",
+    "tags": ["flaky", "race", "async", "teardown", "vite", "intermittent"],
+    "category": "environment_or_infra"
+  },
+  {
+    "id": "KB-020",
+    "title": "Test timeout on a slow CI runner or a hanging subprocess",
+    "error_type": "TimeoutError",
+    "module": "TestEnvironment",
+    "description": "pexpect.exceptions.TIMEOUT: Timeout exceeded, or Test timed out after N ms. The same test passes locally.",
+    "root_cause": "CI runners are slower and shared, or a subprocess or interactive prompt never produces the expected output so the wait hits its limit.",
+    "resolution": "Increase the timeout on CI, wait for a condition instead of sleeping, and capture subprocess output to see where it stalls.",
+    "fix_snippet": "child.expect('(Pdb)', timeout=30)",
+    "tags": ["timeout", "ci", "subprocess", "pexpect", "flaky"],
+    "category": "environment_or_infra"
+  },
+  {
+    "id": "KB-021",
+    "title": "Gradle test worker lost: MessageIOException Could not write",
+    "error_type": "MessageIOException",
+    "module": "Build",
+    "description": "Unexpected exception thrown. org.gradle.internal.remote.internal.MessageIOException: Could not write to a local socket, followed by a Test task FAILED.",
+    "root_cause": "The forked test JVM died, usually from running out of memory or being killed by the runner, so Gradle lost its connection to the worker.",
+    "resolution": "Raise the test JVM heap, reduce test parallelism, look for runaway memory in the failing module, and check the worker crash output.",
+    "fix_snippet": "tasks.withType(Test) { maxHeapSize = '2g'; maxParallelForks = 2 }",
+    "tags": ["gradle", "worker", "jvm", "oom", "crash"],
+    "category": "environment_or_infra"
+  },
+  {
+    "id": "KB-022",
+    "title": "Corrupted download or cache: unexpected EOF while fetching a package",
+    "error_type": "Error",
+    "module": "Dependencies",
+    "description": "Error: unexpected EOF while unzipping a downloaded package, or failed to fetch a package archive from a registry during install.",
+    "root_cause": "A transient network failure truncated the download, or the build cache contains a partial archive.",
+    "resolution": "Clear the cache and retry, add retries to the install step, and mirror critical packages if the registry is unreliable.",
+    "fix_snippet": "npm ci --prefer-offline --fetch-retries=5",
+    "tags": ["network", "download", "cache", "registry", "flaky", "install"],
+    "category": "environment_or_infra"
+  },
+  {
+    "id": "KB-023",
+    "title": "ValueError after a library upgrade: parameter or behaviour changed",
+    "error_type": "ValueError",
+    "module": "Dependencies",
+    "description": "ValueError: You must set either alpha or the deprecated C, or array indexing is only allowed when arrays have matching shapes, raised after upgrading numpy or scikit-learn.",
+    "root_cause": "The library changed an argument or removed a deprecated option, and the test or code still uses the old call.",
+    "resolution": "Read the library changelog, update the call to the new parameter, and pin an upper version bound until the code is migrated.",
+    "fix_snippet": "model = Lasso(alpha=1.0)  # use the new parameter name",
+    "tags": ["valueerror", "deprecation", "upgrade", "numpy", "scikit-learn"],
+    "category": "runtime_exception"
+  },
+  {
+    "id": "KB-024",
+    "title": "Missing environment variable or secret on CI, especially for pull requests from forks",
+    "error_type": "KeyError",
+    "module": "Configuration",
+    "description": "KeyError for an API token, environment variable not set, 401 Unauthorized or Permission denied, only on CI.",
+    "root_cause": "Secrets are not exposed to workflows triggered by forks, or the variable is defined locally but missing in the CI configuration.",
+    "resolution": "Define the variable in the CI settings, skip or mock tests that need secrets on forks, and fail early with a clear message.",
+    "fix_snippet": "@pytest.mark.skipif(not os.environ.get('API_TOKEN'), reason='needs secret')",
+    "tags": ["environment-variable", "secrets", "credentials", "fork", "config"],
+    "category": "environment_or_infra"
+  },
+  {
+    "id": "KB-025",
+    "title": "AttributeError: NoneType object has no attribute",
+    "error_type": "AttributeError",
+    "module": "Application",
+    "description": "AttributeError: 'NoneType' object has no attribute raised in a test because a function returned None unexpectedly.",
+    "root_cause": "A lookup, regex match or API call returned None and the result was used without a check, often because a mock or fixture is incomplete.",
+    "resolution": "Check the value before use, make the function raise a clear error, and fix the mock or fixture that returns None.",
+    "fix_snippet": "match = pattern.search(text); assert match is not None, 'pattern did not match'",
+    "tags": ["none", "attribute-error", "python", "mock", "fixture"],
+    "category": "runtime_exception"
+  },
+  {
+    "id": "KB-026",
+    "title": "Runner out of memory or disk: MemoryError, heap out of memory, No space left on device",
+    "error_type": "MemoryError",
+    "module": "TestEnvironment",
+    "description": "FATAL ERROR: JavaScript heap out of memory, java.lang.OutOfMemoryError, MemoryError or No space left on device on the CI runner.",
+    "root_cause": "The test suite or build exceeds the runner's memory or disk, often from large fixtures, unbounded caches or leftover build artifacts.",
+    "resolution": "Increase the heap, split the suite, clean caches between jobs, and use smaller fixtures.",
+    "fix_snippet": "NODE_OPTIONS=--max-old-space-size=4096 npm test",
+    "tags": ["oom", "memory", "disk", "runner", "resources"],
+    "category": "environment_or_infra"
   }
 ]

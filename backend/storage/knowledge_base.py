@@ -1,7 +1,6 @@
 """
 Knowledge base loader and search.
-Loads known issues + fixes from knowledge_base.json.
-Supports keyword and semantic search.
+Loads known issues + fixes from knowledge_base.json and supports semantic search.
 """
 
 import json
@@ -27,6 +26,7 @@ class KnowledgeEntry:
     resolution: str
     fix_snippet: str
     tags: list[str]
+    category: str = ""  # coarse failure class, used by the real-data evaluation
 
     def to_search_text(self) -> str:
         return (
@@ -48,16 +48,15 @@ class KnowledgeBase:
         with open(KB_PATH, encoding="utf-8") as f:
             data = json.load(f)
         self.entries = [KnowledgeEntry(**item) for item in data]
-        texts = [e.to_search_text() for e in self.entries]
-        self._embeddings = embed_batch(texts)
+        self._embeddings = embed_batch([e.to_search_text() for e in self.entries])
         print(f"[KnowledgeBase] Loaded {len(self.entries)} entries.")
 
     def search(self, query: str, top_k: int = 3) -> list[tuple[KnowledgeEntry, float]]:
-        """Semantic search over KB entries. Returns (entry, score) pairs."""
+        """Semantic search over KB entries. Returns (entry, score) pairs, best first."""
         if self._embeddings is None or len(self.entries) == 0:
             return []
         query_vec = embed_text(query)
-        scores = self._embeddings @ query_vec  # cosine sim (normalized)
+        scores = self._embeddings @ query_vec  # cosine similarity (vectors are normalized)
         top_indices = np.argsort(scores)[::-1][:top_k]
         return [(self.entries[i], float(scores[i])) for i in top_indices]
 
