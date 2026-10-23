@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8000/api";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8000/api";
 
 export async function apiHealth() {
   const r = await fetch(`${API_BASE}/health`);
@@ -47,11 +47,18 @@ export async function apiFeedback({ diagnosis_id, feedback }) {
 
 export async function apiMetrics() {
   const r = await fetch(`${API_BASE}/metrics`);
+  if (!r.ok) return null;
   return r.json();
 }
 
 export async function apiEvalResults() {
   const r = await fetch(`${API_BASE}/eval-results`);
+  if (!r.ok) return null;
+  return r.json();
+}
+
+export async function apiEvalReal() {
+  const r = await fetch(`${API_BASE}/eval-real`);
   if (!r.ok) return null;
   return r.json();
 }

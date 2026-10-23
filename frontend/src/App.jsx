@@ -3,9 +3,9 @@ import "./index.css";
 import LogInput from "./components/LogInput";
 import DiagnosisCard from "./components/DiagnosisCard";
 import SimilarFailures from "./components/SimilarFailures";
-import EvalDashboard from "./components/EvalDashboard";
-import HeldOutEval from "./components/HeldOutEval";
 import KnowledgeView from "./components/KnowledgeView";
+import RealEval from "./components/RealEval";
+import HeldOutEval from "./components/HeldOutEval";
 import { apiDiagnose, apiIngest, apiHealth, apiFeedback } from "./api";
 
 function Toast({ toast }) {
@@ -163,7 +163,7 @@ export default function App() {
                     <span style={{ marginLeft: "auto", fontSize: "0.75rem", color: "var(--text-muted)" }}>
                       {feedbackGiven
                         ? `Recorded as "${feedbackGiven}" — see the Evaluation tab`
-                        : "Feedback is tracked in the Evaluation tab"}
+                        : "Feedback re-orders future matches and is counted in the Evaluation tab"}
                     </span>
                   </div>
                 </div>
@@ -186,10 +186,10 @@ export default function App() {
         {tab === "knowledge" && <KnowledgeView />}
 
         {/* ── Evaluation tab ── */}
-                {tab === "eval" && (
+        {tab === "eval" && (
           <>
+            <RealEval />
             <HeldOutEval />
-            <EvalDashboard />
           </>
         )}
       </main>

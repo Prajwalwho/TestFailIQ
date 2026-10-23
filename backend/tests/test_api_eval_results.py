@@ -5,17 +5,29 @@ import pytest
 from fastapi.testclient import TestClient
 
 import main
+import routes_eval
 
 # No `with` block: the startup handler (which loads the production index) is not triggered.
 client = TestClient(main.app)
 
 
-def test_eval_results_route_is_registered():
-    assert "/api/eval-results" in {route.path for route in main.app.routes}
+def test_both_eval_routes_are_registered():
+    from fastapi.testclient import TestClient
 
+    client = TestClient(main.app)
+
+    response = client.get("/api/eval-results")
+    assert response.status_code == 200
+
+    data = response.json()
+    assert "test_sets" in data
+    assert data["index_size"] == 30
+
+    health_response = client.get("/api/health")
+    assert health_response.status_code == 200
 
 def test_missing_file_returns_404_with_instructions(tmp_path, monkeypatch):
-    monkeypatch.setattr(main, "EVAL_RESULTS_PATH", str(tmp_path / "missing.json"))
+    monkeypatch.setattr(routes_eval, "EVAL_RESULTS_PATH", str(tmp_path / "missing.json"))
     response = client.get("/api/eval-results")
     assert response.status_code == 404
     assert "run_eval.py" in response.json()["detail"]
@@ -25,7 +37,7 @@ def test_valid_file_is_returned_unchanged(tmp_path, monkeypatch):
     payload = {"index_size": 30, "test_sets": {"standard": {}, "hard": {}, "combined": {}}}
     path = tmp_path / "eval_results.json"
     path.write_text(json.dumps(payload), encoding="utf-8")
-    monkeypatch.setattr(main, "EVAL_RESULTS_PATH", str(path))
+    monkeypatch.setattr(routes_eval, "EVAL_RESULTS_PATH", str(path))
     response = client.get("/api/eval-results")
     assert response.status_code == 200
     assert response.json() == payload
@@ -34,17 +46,31 @@ def test_valid_file_is_returned_unchanged(tmp_path, monkeypatch):
 def test_corrupt_file_returns_500_not_a_crash(tmp_path, monkeypatch):
     path = tmp_path / "eval_results.json"
     path.write_text("{not json", encoding="utf-8")
-    monkeypatch.setattr(main, "EVAL_RESULTS_PATH", str(path))
+    monkeypatch.setattr(routes_eval, "EVAL_RESULTS_PATH", str(path))
     response = client.get("/api/eval-results")
     assert response.status_code == 500
     assert "could not be read" in response.json()["detail"]
 
 
+def test_eval_real_returns_nulls_when_nothing_was_generated(tmp_path, monkeypatch):
+    monkeypatch.setattr(routes_eval, "DATA_DIR", str(tmp_path))
+    body = client.get("/api/eval-real").json()
+    assert body == {"retrieval": None, "kb": None, "rag": None, "thresholds": None}
+
+
+def test_eval_real_passes_existing_files_through(tmp_path, monkeypatch):
+    (tmp_path / "thresholds.json").write_text(json.dumps({"similar_min": 0.625}), encoding="utf-8")
+    monkeypatch.setattr(routes_eval, "DATA_DIR", str(tmp_path))
+    body = client.get("/api/eval-real").json()
+    assert body["thresholds"] == {"similar_min": 0.625}
+    assert body["rag"] is None
+
+
 def test_real_results_file_matches_what_the_panel_needs():
     """Contract with frontend/src/components/HeldOutEval.jsx (skipped if the file does not exist yet)."""
-    if not os.path.exists(main.EVAL_RESULTS_PATH):
+    if not os.path.exists(routes_eval.EVAL_RESULTS_PATH):
         pytest.skip("data/eval_results.json not generated yet")
-    with open(main.EVAL_RESULTS_PATH, encoding="utf-8") as f:
+    with open(routes_eval.EVAL_RESULTS_PATH, encoding="utf-8") as f:
         data = json.load(f)
     assert isinstance(data["index_size"], int)
     for set_name in ("standard", "hard", "combined"):

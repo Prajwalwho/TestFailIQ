@@ -7,7 +7,7 @@ import json
 import os
 import uuid
 from dataclasses import asdict, dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 STORE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "diagnoses.json")
@@ -45,7 +45,7 @@ class DiagnosisStore:
     def add(self, **fields) -> DiagnosisRecord:
         record = DiagnosisRecord(
             id=f"DX-{uuid.uuid4().hex[:8].upper()}",
-            timestamp=datetime.utcnow().isoformat(),
+            timestamp=datetime.now(timezone.utc).isoformat(),
             **fields,
         )
         self.records.append(record)

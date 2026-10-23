@@ -7,7 +7,7 @@ import os
 import sys
 import uuid
 from contextlib import asynccontextmanager
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException
@@ -17,22 +17,25 @@ from pydantic import BaseModel, Field
 # Add backend dir to path so imports work
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from evaluation.metrics import compute_metrics
 from ingestion.log_parser import parse_log
 from rag.generator import generate_diagnosis
 from rag.retriever import retrieve
+from routes_eval import router as eval_router
 from storage.diagnosis_store import get_diagnosis_store
 from storage.faiss_store import FailureRecord, get_store
 from storage.knowledge_base import get_kb
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
-EVAL_RESULTS_PATH = os.path.join(DATA_DIR, "eval_results.json")
 MAX_LOG_CHARS = 200_000
 ALLOWED_ORIGINS = [
     o.strip()
     for o in os.environ.get("CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
     if o.strip()
 ]
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
 # ── Startup ──────────────────────────────────────────────────────────────────
@@ -60,6 +63,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.include_router(eval_router)
 
 
 def _ingest_synthetic_logs(store):
@@ -86,7 +90,7 @@ def _ingest_synthetic_logs(store):
             error_message=parsed.error_message,
             stacktrace=parsed.stacktrace,
             log_text=log_data["log_text"],
-            timestamp=log_data.get("timestamp", datetime.utcnow().isoformat()),
+            timestamp=log_data.get("timestamp", _now()),
             known_issue_id=log_data.get("known_issue_id"),
             resolution=log_data.get("resolution"),
         )
@@ -120,8 +124,7 @@ class FeedbackRequest(BaseModel):
 # ── Routes ───────────────────────────────────────────────────────────────────
 @app.get("/api/health")
 def health():
-    store = get_store()
-    return {"status": "ok", "indexed_failures": store.size}
+    return {"status": "ok", "indexed_failures": get_store().size}
 
 
 @app.post("/api/ingest")
@@ -136,7 +139,7 @@ def ingest(req: IngestRequest):
         error_message=parsed.error_message,
         stacktrace=parsed.stacktrace,
         log_text=req.log_text,
-        timestamp=datetime.utcnow().isoformat(),
+        timestamp=_now(),
         known_issue_id=req.known_issue_id,
         resolution=req.resolution,
     )
@@ -232,7 +235,6 @@ def list_failures():
                 "error_message": r.error_message,
                 "timestamp": r.timestamp,
                 "resolution": r.resolution,
-                "feedback": r.feedback,
             }
             for r in store.get_all()
         ],
@@ -255,7 +257,6 @@ def get_failure(failure_id: str):
         "timestamp": record.timestamp,
         "known_issue_id": record.known_issue_id,
         "resolution": record.resolution,
-        "feedback": record.feedback,
     }
 
 
@@ -295,30 +296,20 @@ def submit_feedback(req: FeedbackRequest):
 
 @app.get("/api/metrics")
 def get_metrics():
-    """Return the legacy self-retrieval metrics and feedback counts."""
-    metrics = compute_metrics()
+    """Feedback counts. (The old self-retrieval score was removed: it measured the parser, not retrieval.)"""
+    diagnoses = get_diagnosis_store().get_all()
+    correct = sum(1 for d in diagnoses if d.feedback == "correct")
+    incorrect = sum(1 for d in diagnoses if d.feedback == "incorrect")
+    pending = sum(1 for d in diagnoses if d.feedback is None)
+    rated = correct + incorrect
     return {
-        "total_indexed": metrics.total_indexed,
-        "total_diagnoses": metrics.total_diagnoses,
-        "feedback_correct": metrics.feedback_correct,
-        "feedback_incorrect": metrics.feedback_incorrect,
-        "feedback_pending": metrics.feedback_pending,
-        "resolution_rate": metrics.resolution_rate,
-        "retrieval_at_1": metrics.retrieval_at_1,
-        "retrieval_at_3": metrics.retrieval_at_3,
+        "total_indexed": get_store().size,
+        "total_diagnoses": len(diagnoses),
+        "feedback_correct": correct,
+        "feedback_incorrect": incorrect,
+        "feedback_pending": pending,
+        "resolution_rate": round(correct / rated, 3) if rated else 0.0,
     }
-
-
-@app.get("/api/eval-results")
-def get_eval_results():
-    """Held-out retrieval evaluation written by evaluation/run_eval.py (read-only; never reruns it)."""
-    if not os.path.exists(EVAL_RESULTS_PATH):
-        raise HTTPException(status_code=404, detail="No eval results yet. Run: python evaluation/run_eval.py")
-    try:
-        with open(EVAL_RESULTS_PATH, encoding="utf-8") as f:
-            return json.load(f)
-    except (OSError, ValueError) as e:
-        raise HTTPException(status_code=500, detail=f"eval_results.json could not be read ({type(e).__name__})")
 
 
 if __name__ == "__main__":

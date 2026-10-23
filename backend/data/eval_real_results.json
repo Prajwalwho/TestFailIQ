@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22T05:54:30.865068+00:00",
+  "generated_at": "2026-10-23T06:44:45.811506+00:00",
   "documents": 79,
   "queries": 49,
   "label_counts": {
@@ -11,21 +11,21 @@
   "systems": {
     "embedding / full": {
       "n": 49,
-      "hit1_count": 17,
-      "hit_at_1": 0.347,
+      "hit1_count": 18,
+      "hit_at_1": 0.367,
       "hit1_ci": [
-        0.229,
-        0.487
+        0.247,
+        0.507
       ],
-      "hit_at_3": 0.735,
-      "mrr": 0.562,
+      "hit_at_3": 0.755,
+      "mrr": 0.578,
       "per_label": {
         "environment_or_infra": {
           "hits": 3,
           "total": 15
         },
         "assertion_failure": {
-          "hits": 0,
+          "hits": 1,
           "total": 13
         },
         "runtime_exception": {

@@ -10,9 +10,8 @@ import re
 from dataclasses import dataclass, field
 from typing import Optional
 
-# Which text is embedded for similarity search. "full" is the original behaviour.
-# evaluation/run_real_eval.py compares the variants on real logs.
-# After changing this, delete data/faiss_store and restart the server (vectors are rebuilt).
+# Which text is embedded for similarity search. "error_only" won the real-data evaluation
+# (evaluation/run_real_eval.py). After changing this, run ingest_real_logs.py to re-embed the index.
 DEFAULT_VARIANT = "error_only"
 VARIANTS = ("full", "no_names", "no_names_norm", "error_only", "raw_head")
 
@@ -88,6 +87,7 @@ _PY_SUMMARY = re.compile(
     r"^(?:FAILED|ERROR)[ \t]+\S+[ \t]+-[ \t]+"
     r"(?:((?:[\w.]+\.)?\w*(?:Error|Exception|Failed|TIMEOUT))[ \t]*:[ \t]*)?(.*)$", re.M)
 _JEST_EXPECT = re.compile(r"^\s*(expect\(.+?\)\.[\w.]+\(.*?\))", re.M)
+_JS_MISSING = re.compile(r"Cannot find module '([^']+)'")
 _JAVAC = re.compile(r"\.(?:java|kt|groovy|scala):\d+:\s*error:\s*(.+)$", re.M)
 _TSC = re.compile(r"error (TS\d+):\s*(.+)$", re.M)
 _HEADLINE = re.compile(
@@ -165,6 +165,10 @@ def extract_error(text: str, framework: str = "unknown"):
     if m:
         return m.group(1), _clean_msg(m.group(2))
 
+    m = _JS_MISSING.search(text)
+    if m:
+        return "ModuleNotFoundError", f"Cannot find module '{m.group(1)}'"
+
     m = _HEADLINE.search(text)
     if m:
         return _short_type(m.group(1)), _clean_msg(m.group(2)) or _next_line(text, m.end())
@@ -197,34 +201,63 @@ def _short_node_id(node_id: str) -> str:
     return "::".join(parts[1:]) if len(parts) > 1 else node_id
 
 
+def _simple(name: str) -> str:
+    return re.split(r"[.$]", name)[-1]
+
+
+def _basename(path: str) -> str:
+    return re.split(r"[\\/]", path)[-1]
+
+
 def extract_test_name(text: str) -> str:
-    m = re.search(r"^FAILED[ \t]+(\S+?::\S+?)(?:[ \t]+-[ \t]|[ \t]*$)", text, re.M)
+    m = re.search(r"^FAILED[ \t]+(\S+?::\S+?)(?:[ \t]+-[ \t]|[ \t]*$)", text, re.M)  # pytest summary
     if m:
         return _short_node_id(m.group(1))
-    m = re.search(r"^[ \t]*(\w+(?:Tests?|Spec|IT))[ \t]+>[ \t]+(.+?)[ \t]+FAILED[ \t]*$", text, re.M)
+    m = re.search(r"^(\S+\.py::\S+)[ \t]+(?:FAILED|ERROR)\b", text, re.M)  # pytest -v
+    if m:
+        return _short_node_id(m.group(1))
+    m = re.search(r"\[gw\d+\][^\n]*?(?:FAILED|ERROR)[ \t]+(\S+::\S+)", text)  # pytest-xdist
+    if m:
+        return _short_node_id(m.group(1))
+    m = re.search(r"^[ \t]*(\w+(?:Tests?|Spec|IT))[ \t]+>[ \t]+(.+?)[ \t]+FAILED[ \t]*$", text, re.M)  # Gradle
     if m:
         return f"{m.group(1)} > {m.group(2)}"
-    m = re.search(r"^[ \t]*FAIL[ \t]+\S+[ \t]+>[ \t]+(.+)$", text, re.M)
+    m = re.search(r"^[ \t]*FAIL[ \t]+\S+[ \t]+>[ \t]+(.+)$", text, re.M)  # Vitest
     if m:
         return m.group(1).strip()
-    m = re.search(r"^[ \t]*●[ \t]+(.+?)[ \t]*$", text, re.M)
-    if m:
+    m = re.search(r"^[ \t]*●[ \t]+(.+?)[ \t]*$", text, re.M)  # Jest
+    if m and not m.group(1).lower().startswith("test suite failed"):
         return m.group(1).strip()
-    m = re.search(r"^--- FAIL:[ \t]+(\S+)", text, re.M)
+    m = re.search(r"^--- FAIL:[ \t]+(\S+)", text, re.M)  # Go
     if m:
         return m.group(1)
-    m = re.search(r"^_{3,}[ \t]*(.+?)[ \t]*_{3,}[ \t]*$", text, re.M)
+    m = re.search(r"^_{3,}[ \t]*(.+?)[ \t]*_{3,}[ \t]*$", text, re.M)  # pytest failure header
     if m:
         return m.group(1).strip()
+    m = re.search(r"\[ERROR\][ \t]+(\w+)\(([\w.$]+)\)[ \t]+Time elapsed", text)  # Surefire per test
+    if m:
+        return f"{_simple(m.group(2))}.{m.group(1)}"
+    m = re.search(r"^\[ERROR\][ \t]+([\w.$]+)\.(\w+):\d+", text, re.M)  # Surefire failure summary
+    if m:
+        return f"{_simple(m.group(1))}.{m.group(2)}"
     m = re.search(r"(test\w+|Test\w+)\s*--", text)
     if m:
         return m.group(1)
     m = re.search(r"Running (\w+Test)", text)
     if m:
         return m.group(1)
-    m = re.search(r"^[ \t]*\d+\)[ \t]+(.+)$", text, re.M)  # mocha
+    m = re.search(r"^[ \t]*FAIL[ \t]+(\S+\.(?:[jt]sx?|mjs|cjs))", text, re.M)  # Jest: file only
+    if m:
+        return _basename(m.group(1))
+    m = re.search(r"^[ \t]*\d+\)[ \t]+(.+)$", text, re.M)  # Mocha
     if m:
         return m.group(1).strip()
+    m = re.search(r"^(\S*test\S*\.py):\d+:", text, re.M)  # pytest traceback location
+    if m:
+        return _basename(m.group(1))
+    m = re.search(r"([\w./\\-]*(?:test|spec)[\w.\-]*\.(?:py|js|jsx|ts|tsx|mjs|java|kt|go|rb))", text)
+    if m:
+        return _basename(m.group(1))
     return "UnknownTest"
 
 
@@ -234,6 +267,14 @@ _GENERIC_DIRS = {"tests", "test", "__tests__", "spec", "specs", "src", "unit", "
 _FRAMEWORK_FRAME_PREFIXES = ("java.", "javax.", "jdk.", "sun.", "kotlin.", "org.junit", "org.gradle",
                              "org.apache.maven", "org.opentest4j", "org.testng")
 _JAVA_FRAME = re.compile(r"^\s*at\s+(?:app//)?([\w.$]+)\.([\w$<>]+)\(", re.M)
+_PATH_PATTERNS = [
+    r"^(?:FAILED|ERROR)[ \t]+(\S+?\.py)",
+    r"^(\S+?\.py)::\S+[ \t]+(?:FAILED|ERROR)\b",
+    r"\[gw\d+\][^\n]*?(?:FAILED|ERROR)[ \t]+(\S+?\.py)",
+    r"test module '([^']+\.py)'",
+    r"^[ \t]*FAIL[ \t]+(\S+\.(?:[jt]sx?|mjs|cjs))",
+]
+_THIRD_PARTY_PATH = re.compile(r"site-packages|node_modules|node:|/lib/python|\\Lib\\|dist-packages")
 
 
 def _module_from_path(path: str) -> str:
@@ -246,6 +287,20 @@ def _module_from_path(path: str) -> str:
     stem = re.sub(r"\.\w+$", "", parts[-1])
     stem = re.sub(r"^test_|_test$|\.test$|\.spec$", "", stem)
     return stem or "Unknown"
+
+
+def _first_project_path(text: str) -> Optional[str]:
+    """First project (not library) file named in a traceback or stack frame."""
+    patterns = [
+        r"^(\S+\.py):\d+:",                                  # pytest traceback location
+        r'^\s*File "([^"]+\.py)", line \d+',                  # Python traceback frame
+        r"\(([^()\s]+\.(?:[jt]sx?|mjs|cjs)):\d+:\d+\)",       # JavaScript stack frame
+    ]
+    for pattern in patterns:
+        for m in re.finditer(pattern, text, re.M):
+            if not _THIRD_PARTY_PATH.search(m.group(1)):
+                return m.group(1)
+    return None
 
 
 def extract_module(text: str) -> str:
@@ -264,25 +319,28 @@ def extract_module(text: str) -> str:
         if parts:
             return parts[-2] if len(parts) >= 2 else parts[0]
 
-    # 3. File paths: pytest node ids / collection errors, Jest and Vitest FAIL lines
-    m = re.search(
-        r"^(?:FAILED|ERROR)[ \t]+(\S+?\.py)|test module '([^']+\.py)'|"
-        r"^[ \t]*FAIL[ \t]+(\S+\.(?:[jt]sx?|mjs|cjs))", text, re.M)
-    if m:
-        path = next(g for g in m.groups() if g)
-        return _module_from_path(path)
+    # 3. File paths named in failure lines
+    for pattern in _PATH_PATTERNS:
+        m = re.search(pattern, text, re.M)
+        if m:
+            return _module_from_path(m.group(1))
 
     # 4. Go package
     m = re.search(r"^FAIL[ \t]+(\S+)[ \t]+[\d.]+s", text, re.M)
     if m:
         return m.group(1).rstrip("/").split("/")[-1]
 
-    # 5. First non-framework Java frame
+    # 5. First project file in a traceback or stack frame
+    path = _first_project_path(text)
+    if path:
+        return _module_from_path(path)
+
+    # 6. First non-framework Java frame
     for m in _JAVA_FRAME.finditer(text):
         qualified = m.group(1)
         if qualified.startswith(_FRAMEWORK_FRAME_PREFIXES):
             continue
-        simple = re.split(r"[.$]", qualified)[-1]
+        simple = _simple(qualified)
         if simple and not simple.endswith(("Test", "Tests")):
             return simple
     return "Unknown"
@@ -303,10 +361,6 @@ def _java_stacktrace(text: str) -> str:
         elif in_stack:
             break
     return "\n".join(stack_lines[:25])
-
-
-def _basename(path: str) -> str:
-    return re.split(r"[\\/]", path)[-1]
 
 
 def _python_stacktrace(text: str) -> str:
