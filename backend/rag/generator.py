@@ -6,9 +6,11 @@ issue. Evidence is marked as possibly unrelated so the model uses it only when i
 If Ollama is unavailable or returns invalid output, the diagnosis falls back to the KB entry.
 
 call_llm() and _build_prompt(ask_category=True) are also used by evaluation/run_rag_ablation.py.
+OLLAMA_URL, OLLAMA_MODEL and OLLAMA_TIMEOUT can be overridden with environment variables (Docker).
 """
 
 import json
+import os
 from dataclasses import dataclass
 from typing import Optional
 
@@ -19,11 +21,11 @@ from ingestion.log_parser import ParsedLog
 from rag.confidence import confidence_from_similarity
 from rag.retriever import RetrievedEvidence
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "llama3.2"   # change to "mistral", "llama3", "qwen2.5", ...
+OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434/api/generate")
+OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2")   # change to "mistral", "llama3", "qwen2.5", ...
 FALLBACK_MODE_MSG = "(KB fallback — Ollama unavailable)"
 FALLBACK_BAD_OUTPUT_MSG = "(KB fallback — invalid LLM output)"
-TIMEOUT = 120  # seconds
+TIMEOUT = int(os.environ.get("OLLAMA_TIMEOUT", "120"))  # seconds
 LOG_EXCERPT_CHARS = 1500
 
 CATEGORIES = ["assertion_failure", "dependency_or_import", "build_or_compile",

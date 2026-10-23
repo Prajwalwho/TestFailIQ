@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+tests/
+data/faiss_store/
+data/real_logs/logs/
+data/real_samples.txt
+data/diagnoses.json
+data/ablation_runs.jsonl
+rebuild_backup/
