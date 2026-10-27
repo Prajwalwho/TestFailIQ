@@ -25,11 +25,29 @@ export default function App() {
   const [backendStatus, setBackendStatus] = useState("checking");
   const [feedbackGiven, setFeedbackGiven] = useState(null);
 
-  // Check backend health
+  // Check backend health with retry/polling for sleeping free-tier servers
   useEffect(() => {
-    apiHealth()
-      .then(() => setBackendStatus("online"))
-      .catch(() => setBackendStatus("offline"));
+    let timer;
+    let cancelled = false;
+
+    const check = () => {
+      apiHealth()
+        .then(() => {
+          if (!cancelled) setBackendStatus("online");
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setBackendStatus((prev) => (prev === "online" ? "offline" : "waking_up"));
+            timer = setTimeout(check, 4000);
+          }
+        });
+    };
+
+    check();
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, []);
 
   function showToast(message, type = "success") {
@@ -109,9 +127,11 @@ export default function App() {
           </nav>
 
           <div className="status-dot">
-            <div className={`dot ${backendStatus === "offline" ? "offline" : ""}`} />
+            <div className={`dot ${backendStatus === "offline" ? "offline" : backendStatus === "waking_up" ? "waking" : ""}`} />
             {backendStatus === "online"
               ? "Backend online"
+              : backendStatus === "waking_up"
+              ? "Waking up server…"
               : backendStatus === "offline"
               ? "Backend offline"
               : "Connecting…"}
