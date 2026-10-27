@@ -82,7 +82,7 @@ class FAISSStore:
         faiss.write_index(self.index, INDEX_PATH)
         with open(META_PATH, "wb") as f:
             pickle.dump(self.records, f)
-        print(f"[FAISSStore] Saved {self.index.ntotal} vectors → {STORE_DIR}")
+        print(f"[FAISSStore] Saved {self.index.ntotal} vectors -> {STORE_DIR}")
 
     def load(self) -> bool:
         if os.path.exists(INDEX_PATH) and os.path.exists(META_PATH):

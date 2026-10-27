@@ -22,3 +22,4 @@ backend/data/real_logs/logs/
 # Local FAISS index backups
 backend/data/faiss_store_backup/
 backend/data/faiss_store/rebuild_backup/
+backend/data/faiss_store_with_real_logs/
