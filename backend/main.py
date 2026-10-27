@@ -2,8 +2,15 @@
 FastAPI application — Test Failure Investigation Assistant backend.
 """
 
-import json
 import os
+# Prevent multi-threading memory explosion on multi-core host nodes (Render 512MB RAM)
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+
+import json
 import sys
 import uuid
 from contextlib import asynccontextmanager

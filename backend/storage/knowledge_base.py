@@ -13,6 +13,7 @@ import numpy as np
 from ingestion.embedder import embed_batch, embed_text
 
 KB_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "knowledge_base.json")
+KB_EMB_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "kb_embeddings.npy")
 
 
 @dataclass
@@ -48,8 +49,17 @@ class KnowledgeBase:
         with open(KB_PATH, encoding="utf-8") as f:
             data = json.load(f)
         self.entries = [KnowledgeEntry(**item) for item in data]
-        self._embeddings = embed_batch([e.to_search_text() for e in self.entries])
-        print(f"[KnowledgeBase] Loaded {len(self.entries)} entries.")
+        if os.path.exists(KB_EMB_PATH):
+            self._embeddings = np.load(KB_EMB_PATH)
+            print(f"[KnowledgeBase] Loaded {len(self.entries)} entries (cached embeddings from {KB_EMB_PATH}).")
+        else:
+            self._embeddings = embed_batch([e.to_search_text() for e in self.entries])
+            try:
+                np.save(KB_EMB_PATH, self._embeddings)
+                print(f"[KnowledgeBase] Saved precomputed embeddings to {KB_EMB_PATH}.")
+            except Exception as e:
+                print(f"[KnowledgeBase] Could not cache embeddings: {e}")
+            print(f"[KnowledgeBase] Loaded {len(self.entries)} entries.")
 
     def search(self, query: str, top_k: int = 3) -> list[tuple[KnowledgeEntry, float]]:
         """Semantic search over KB entries. Returns (entry, score) pairs, best first."""

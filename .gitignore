@@ -5,8 +5,7 @@ __pycache__/
 venv/
 .env
 
-# Generated at runtime (rebuilt automatically)
-backend/data/faiss_store/
+# Generated at runtime
 backend/data/diagnoses.json
 
 # Node
