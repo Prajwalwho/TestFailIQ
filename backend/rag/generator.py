@@ -23,7 +23,9 @@ from rag.retriever import RetrievedEvidence
 
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434/api/generate")
 OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2")   # change to "mistral", "llama3", "qwen2.5", ...
-FALLBACK_MODE_MSG = "(KB fallback — Ollama unavailable)"
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "").strip()
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
+FALLBACK_MODE_MSG = "(KB fallback — Ollama/LLM unavailable)"
 FALLBACK_BAD_OUTPUT_MSG = "(KB fallback — invalid LLM output)"
 TIMEOUT = int(os.environ.get("OLLAMA_TIMEOUT", "120"))  # seconds
 LOG_EXCERPT_CHARS = 1500
@@ -152,25 +154,63 @@ def call_llm(prompt: str, num_predict: int = 800, temperature: float = 0.2, seed
     return LLMDiagnosis.model_validate(json.loads(response.json()["response"])).model_dump()
 
 
+def call_groq(prompt: str) -> dict:
+    """Call Groq API (free OpenAI-compatible endpoint) with JSON response format."""
+    headers = {
+        "Authorization": f"Bearer {GROQ_API_KEY}",
+        "Content-Type": "application/json",
+    }
+    payload = {
+        "model": GROQ_MODEL,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ],
+        "response_format": {"type": "json_object"},
+        "temperature": 0.2,
+    }
+    response = httpx.post(
+        "https://api.groq.com/openai/v1/chat/completions",
+        headers=headers,
+        json=payload,
+        timeout=TIMEOUT,
+    )
+    response.raise_for_status()
+    raw_content = response.json()["choices"][0]["message"]["content"]
+    return LLMDiagnosis.model_validate(json.loads(raw_content)).model_dump()
+
+
 def _confidence(evidence: RetrievedEvidence) -> float:
     return confidence_from_similarity(evidence.top_similarity)
 
 
 def generate_diagnosis(parsed_log: ParsedLog, evidence: RetrievedEvidence) -> DiagnosisResult:
-    """Ask Ollama for a diagnosis; fall back to KB data if anything goes wrong."""
+    """Ask Groq or Ollama for a diagnosis; fall back to KB data if anything goes wrong."""
     prompt = _build_prompt(parsed_log, evidence)
-    model_used = OLLAMA_MODEL
 
-    try:
-        data = call_llm(prompt)
-    except httpx.HTTPError as e:  # connection refused, timeout, 404/500 from Ollama
-        print(f"[Generator] Ollama request failed: {type(e).__name__}: {e}")
-        data = _fallback_from_evidence(evidence)
-        model_used = FALLBACK_MODE_MSG
-    except (json.JSONDecodeError, KeyError, ValidationError) as e:
-        print(f"[Generator] Invalid LLM output: {type(e).__name__}: {e}")
-        data = _fallback_from_evidence(evidence)
-        model_used = FALLBACK_BAD_OUTPUT_MSG
+    if GROQ_API_KEY:
+        try:
+            data = call_groq(prompt)
+            model_used = f"Groq ({GROQ_MODEL})"
+        except httpx.HTTPError as e:
+            print(f"[Generator] Groq request failed: {type(e).__name__}: {e}")
+            data = _fallback_from_evidence(evidence)
+            model_used = FALLBACK_MODE_MSG
+        except (json.JSONDecodeError, KeyError, ValidationError) as e:
+            print(f"[Generator] Invalid Groq output: {type(e).__name__}: {e}")
+            data = _fallback_from_evidence(evidence)
+            model_used = FALLBACK_BAD_OUTPUT_MSG
+    else:
+        model_used = OLLAMA_MODEL
+        try:
+            data = call_llm(prompt)
+        except httpx.HTTPError as e:  # connection refused, timeout, 404/500 from Ollama
+            print(f"[Generator] Ollama request failed: {type(e).__name__}: {e}")
+            data = _fallback_from_evidence(evidence)
+            model_used = FALLBACK_MODE_MSG
+        except (json.JSONDecodeError, KeyError, ValidationError) as e:
+            print(f"[Generator] Invalid LLM output: {type(e).__name__}: {e}")
+            data = _fallback_from_evidence(evidence)
+            model_used = FALLBACK_BAD_OUTPUT_MSG
 
     return DiagnosisResult(
         root_cause=data.get("root_cause") or "Unable to determine root cause.",
