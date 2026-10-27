@@ -2,7 +2,16 @@
 
 [![CI](https://github.com/Prajwalwho/TestFailIQ/actions/workflows/ci.yml/badge.svg)](https://github.com/Prajwalwho/TestFailIQ/actions/workflows/ci.yml)
 
-Paste a failed CI log and get a failure class, similar past failures, a matching known issue, and a suggested root cause with next steps. Everything runs locally: a log parser, sentence-transformer embeddings, FAISS, a knowledge base for retrieval, and a local LLM (Ollama) to write the diagnosis.
+Paste a failed CI log and get a failure class, similar past failures, a matching known issue, and a suggested root cause with next steps. The application combines a log parser, sentence-transformer embeddings, FAISS, a knowledge base for retrieval, and an LLM for diagnosis generation.
+
+## Live Demo
+
+- **Frontend:** [TestFailIQ](https://test-fail-iq.vercel.app)
+- **Backend health:** [API health check](https://testfailiq-backend.onrender.com/api/health)
+
+The frontend is deployed on Vercel and the API on Render. The backend health endpoint reports the service status and indexed failure count.
+
+**Current deployment status:** The hosted application is responding and historical failure retrieval is working. However, the diagnosis screenshot currently reports `KB fallback — Ollama/LLM unavailable`. The hosted LLM integration has not yet been verified successfully, so generated diagnoses should not be assumed to come from the LLM.
 
 ## Screenshots
 
@@ -29,31 +38,48 @@ Browse the known issues, their root causes, resolutions, code snippets, and sear
 ## How it works
 
 ```text
-CI log ──► Parser ──► error type, message (+ test name, module, stack trace)
-                         │
-                         ▼
-              Embedding (MiniLM, error line)
-                 │                  │
-                 ▼                  ▼
-         FAISS: similar past    Knowledge base
-         failures               (26 entries)
-                 └────────┬─────────┘
-                          ▼
-             Re-order with user feedback
-             (never creates evidence)
-                          ▼
-         Prompt: log excerpt + evidence marked
-         "may be unrelated"
-                          ▼
-        Local LLM (Ollama, llama3.2)
-        ── JSON schema validated ──► diagnosis
-                          │
-        Ollama down or invalid JSON
-        ──► knowledge-base fallback
-                          ▼
-        React UI: diagnosis, calibrated confidence,
-        similar failures, KB match, 👍/👎
+CI log
+  │
+  ▼
+Parser ──► error type, message, test name, module, stack trace
+  │
+  ▼
+Embedding (MiniLM, error line)
+  │
+  ├──────────────────┐
+  ▼                  ▼
+FAISS: similar       Knowledge base
+past failures        (26 entries)
+  │                  │
+  └────────┬─────────┘
+           ▼
+     Re-order with user feedback
+     (never creates evidence)
+           │
+           ▼
+     Prompt: log excerpt + evidence
+     marked "may be unrelated"
+           │
+           ▼
+     Local LLM (Ollama, llama3.2)
+           │
+           ▼
+     JSON schema validation
+           │
+           ├── Success ──► Diagnosis
+           │
+           └── Ollama unavailable
+               or invalid JSON
+                    │
+                    ▼
+             Knowledge-base fallback
+                    │
+                    ▼
+     React UI: diagnosis, calibrated confidence,
+     similar failures, KB matches, feedback
 ```
+
+**Deployment note:** The local Docker setup is designed to use Ollama with `llama3.2`. In the current hosted deployment, the UI reports `KB fallback — Ollama/LLM unavailable`. The fallback provides a response without confirming successful LLM generation.
 
 Supported log formats: pytest, Jest/Vitest, Mocha, Gradle/Maven (JUnit), Go test, with generic fallbacks.
 
@@ -105,7 +131,7 @@ cd backend
 python -m pytest tests -q
 ```
 
-The test suite has 56 tests. CI also runs the frontend build and Docker build.
+The previously verified test suite has 56 passing tests. CI also runs the frontend build and Docker build. Run the commands above to confirm the current state of your checkout.
 
 ## Results on real CI failures
 
@@ -191,7 +217,10 @@ Synthetic held-out sets, written by me, score higher—around 90–100% Hit@1 fo
   - Test name: 52/79
   - Module: 60/79
 - **Confidence is not diagnosis correctness:** Retrieval confidence describes how often similar matches were right, not whether the generated diagnosis is right.
-- **Not production-hardened:** No authentication or rate limiting. Persistence uses FAISS, pickle metadata, and JSON files without locking. LLM calls take 25–30 seconds on CPU. Pickle files must only be loaded from trusted locations.
+- **Hosted deployment:** The frontend is deployed on Vercel and the backend on Render. The hosted backend currently falls back to the knowledge base because Ollama/the LLM is unavailable. Hosted LLM generation and its latency have not yet been verified.
+- **Security:** The deployed service's authentication, rate limiting, request-size limits, and protection against public misuse should be assessed separately from the local development setup. Do not treat deployment alone as evidence that the API is production-hardened.
+- **Local performance:** LLM calls took 25–30 seconds on CPU in the previously tested local setup. Hosted latency may differ and has not been established.
+- **Persistence:** Local persistence uses FAISS, pickle metadata, and JSON files without locking. Pickle files must only be loaded from trusted locations.
 - **Log availability:** Raw log excerpts are third-party content and are not redistributed. `labels.csv` and `manifest.json` list every source run; GitHub retains logs for only about 90 days.
 
 ## API
@@ -214,7 +243,6 @@ Synthetic held-out sets, written by me, score higher—around 90–100% Hit@1 fo
 ```text
 backend/
   main.py, routes_eval.py
-                              API
   ingestion/
     log_parser.py, embedder.py
   storage/
@@ -230,9 +258,9 @@ backend/
     real_logs/ (labels, manifest)
   tests/
 
-frontend/                     React + Vite
-                              Diagnose, Knowledge Base,
-                              Evaluation tabs
+frontend/                         React + Vite
+                                  Diagnose, Knowledge Base,
+                                  Evaluation tabs
 
 docker-compose.yml
 .github/workflows/ci.yml
